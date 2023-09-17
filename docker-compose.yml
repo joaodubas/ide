@@ -1,0 +1,18 @@
+---
+services:
+  nvim:
+    build: .
+    image: 'joaodubas/nvchad:latest'
+    init: true
+    restart: unless-stopped
+    hostname: local
+    entrypoint: sleep
+    command: infinity
+    volumes:
+      - 'home_cache:/home/coder/.cache'
+      - 'home_local_share:/home/coder/.local/share'
+      - './config/rtx:/home/coder/.config/rtx'
+
+volumes:
+  home_cache: {}
+  home_local_share: {}
