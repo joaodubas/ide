@@ -130,9 +130,16 @@ ENV PATH ${LOCAL_BIN_HOME}:$PATH
 RUN curl https://rtx.pub/install.sh | sh \
   && curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
-# configure fish
-RUN git clone https://github.com/NvChad/NvChad.git ~/.config/nvim \
-  && fish -c true \
+# git configuration
+COPY ./patch/kickstart.nvim/updates.patch /tmp
+COPY ./config/nvim/lua/custom/plugins/init.lua /tmp
+RUN git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME}"/nvim \
+  && cd ${XDG_CONFIG_HOME}/nvim \
+  && git reset --hard 313bd75ca04cb2cef48a79ac3ad697a1b9a2daab \
+  && git apply /tmp/updates.patch \
+  && cp /tmp/init.lua ${XDG_CONFIG_HOME}/nvim/lua/custom/plugins \
+  && nvim --headless "+Lazy! sync" +qa
+
 # configure fish and bash
 RUN fish -c true \
   && echo 'starship init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \

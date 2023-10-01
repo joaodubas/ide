@@ -12,6 +12,7 @@ services:
       - 'home_cache:/home/coder/.cache'
       - 'home_local_share:/home/coder/.local/share'
       - './config/rtx:/home/coder/.config/rtx'
+      - './config/nvim/lua/custom:/home/coder/.confing/nvim/lua/custom'
 
 volumes:
   home_cache: {}

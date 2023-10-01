@@ -1,0 +1,107 @@
+diff --git a/init.lua b/init.lua
+index 5257113..4e95937 100644
+--- a/init.lua
++++ b/init.lua
+@@ -219,7 +219,7 @@ require('lazy').setup({
+   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
+   --
+   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
+-  -- { import = 'custom.plugins' },
++  { import = 'custom.plugins' },
+ }, {})
+ 
+ -- [[ Setting options ]]
+@@ -229,11 +229,12 @@ require('lazy').setup({
+ -- Set highlight on search
+ vim.o.hlsearch = false
+ 
+--- Make line numbers default
++-- Make relative line numbers default
+ vim.wo.number = true
++vim.wo.relativenumber = true
+ 
+--- Enable mouse mode
+-vim.o.mouse = 'a'
++-- Disable mouse mode
++vim.o.mouse = ''
+ 
+ -- Sync clipboard between OS and Neovim.
+ --  Remove this option if you want your OS clipboard to remain independent.
+@@ -263,6 +264,14 @@ vim.o.completeopt = 'menuone,noselect'
+ -- NOTE: You should make sure your terminal supports this
+ vim.o.termguicolors = true
+ 
++-- Set foldmethod
++-- See `:help foldmethod`
++vim.opt.foldmethod = 'expr'
++vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
++vim.opt.foldnestmax = 5
++vim.opt.foldlevel = 1
++vim.opt.foldenable = false
++
+ -- [[ Basic Keymaps ]]
+ 
+ -- Keymaps for better default experience
+@@ -323,11 +332,27 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc =
+ -- See `:help nvim-treesitter`
+ require('nvim-treesitter.configs').setup {
+   -- Add languages to be installed here that you want installed for treesitter
+-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
+-
++  ensure_installed = {
++    'css',
++    'dockerfile',
++    'eex',
++    'elixir',
++    'erlang',
++    'go',
++    'heex',
++    'html',
++    'javascript',
++    'lua',
++    'markdown',
++    'python',
++    'sql',
++    'tsx',
++    'typescript',
++    'vim',
++    'vimdoc'
++  },
+   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
+   auto_install = false,
+-
+   highlight = { enable = true },
+   indent = { enable = true },
+   incremental_selection = {
+@@ -456,19 +481,24 @@ require('which-key').register({
+ --  If you want to override the default filetypes that your language server will attach to you can
+ --  define the property 'filetypes' to the map in question.
+ local servers = {
+-  -- clangd = {},
+-  -- gopls = {},
+-  -- pyright = {},
+-  -- rust_analyzer = {},
+-  -- tsserver = {},
+-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+-
++  elixirls = {
++    elixirLS = {
++      dialyzerEnabled = true,
++      dialyzerFormat = "dialyxir_long",
++      fetchDeps = false,
++      mixEnv = "test"
++    }
++  },
++  gopls = {},
++  html = { filetypes = { 'html', 'twig', 'hbs'} },
+   lua_ls = {
+     Lua = {
+       workspace = { checkThirdParty = false },
+       telemetry = { enable = false },
+     },
+   },
++  pyright = {},
++  tsserver = {},
+ }
+ 
+ -- Setup neovim lua configuration
