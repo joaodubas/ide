@@ -133,9 +133,14 @@ RUN curl https://rtx.pub/install.sh | sh \
 # configure fish
 RUN git clone https://github.com/NvChad/NvChad.git ~/.config/nvim \
   && fish -c true \
+# configure fish and bash
+RUN fish -c true \
   && echo 'starship init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo '{$XDG_DATA_HOME}/rtx/bin/rtx activate fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo 'zoxide init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish
+  && echo 'zoxide init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'eval "$(starship init bash)"' >> ${HOME}/.bashrc \
+  && echo 'eval "$(${XDG_DATA_HOME}/rtx/bin/rtx activate bash)"' >> ${HOME}/.bashrc \
+  && echo 'eval "$(zoxide init bash)"' >> ${HOME}/.bashrc
 
 # install rtx plugins
 RUN ${XDG_DATA_HOME}/rtx/bin/rtx plugins install \
