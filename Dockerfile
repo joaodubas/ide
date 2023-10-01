@@ -137,11 +137,13 @@ RUN git clone https://github.com/NvChad/NvChad.git ~/.config/nvim \
   && echo '{$XDG_DATA_HOME}/rtx/bin/rtx activate fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'zoxide init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish
 
+# install rtx plugins
 RUN ${XDG_DATA_HOME}/rtx/bin/rtx plugins install \
+    awscli \
     elixir \
     erlang \
-    kubectl \
-    awscli \
     helm \
+    jq \
+    kubectl \
     poetry \
     terraform
