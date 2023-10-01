@@ -90,13 +90,26 @@ ENV BAT_URL https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${B
 ENV RG_VERSION 13.0.0
 ENV RG_FILE ripgrep_${RG_VERSION}_amd64.deb
 ENV RG_URL https://github.com/BurntSushi/ripgrep/releases/download/${RG_VERSION}/${RG_FILE}
+ENV DO_VERSION 24.0.6
+ENV DO_URL https://download.docker.com/linux/static/stable/x86_64/docker-${DO_VERSION}.tgz
+ENV DC_VERSION v2.21.0
+ENV DC_URL https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-linux-x86_64
 RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes \
   && curl -LO ${BAT_URL} \
   && dpkg -i ${BAT_FILE} \
   && rm ${BAT_FILE} \
   && curl -LO ${RG_URL} \
   && dpkg -i ${RG_FILE} \
-  && rm ${RG_FILE}
+  && rm ${RG_FILE} \
+  && mkdir /tmp/download \
+  && curl -L ${DO_URL} | tar -zx -C /tmp/download \
+  && chgrp --recursive docker /tmp/download \
+  && mv /tmp/download/docker/* /usr/local/bin \
+  && rm -rf /tmp/download \
+  && mkdir -p /usr/local/lib/docker/cli-plugins \
+  && curl -L ${DC_URL} -o /usr/local/lib/docker/cli-plugins/docker-compose \
+  && chmod 750 /usr/local/lib/docker/cli-plugins/docker-compose \
+  && chgrp --recursive docker /usr/local/lib/docker
 
 USER coder
 WORKDIR /home/coder
