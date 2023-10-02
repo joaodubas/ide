@@ -2,7 +2,7 @@
 services:
   nvim:
     build: .
-    image: 'joaodubas/nvchad:latest'
+    image: 'joaodubas/nvim:${NVIM_TAG:-latest}'
     init: true
     restart: unless-stopped
     hostname: local
