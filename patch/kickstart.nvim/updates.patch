@@ -1,5 +1,5 @@
 diff --git a/init.lua b/init.lua
-index 5257113..4e95937 100644
+index 5257113..85e97a5 100644
 --- a/init.lua
 +++ b/init.lua
 @@ -219,7 +219,7 @@ require('lazy').setup({
@@ -42,7 +42,7 @@ index 5257113..4e95937 100644
  -- [[ Basic Keymaps ]]
  
  -- Keymaps for better default experience
-@@ -323,11 +332,27 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc =
+@@ -323,11 +332,29 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc =
  -- See `:help nvim-treesitter`
  require('nvim-treesitter.configs').setup {
    -- Add languages to be installed here that you want installed for treesitter
@@ -57,7 +57,9 @@ index 5257113..4e95937 100644
 +    'go',
 +    'heex',
 +    'html',
++    'http',
 +    'javascript',
++    'json',
 +    'lua',
 +    'markdown',
 +    'python',
@@ -73,7 +75,7 @@ index 5257113..4e95937 100644
    highlight = { enable = true },
    indent = { enable = true },
    incremental_selection = {
-@@ -456,19 +481,24 @@ require('which-key').register({
+@@ -456,19 +483,24 @@ require('which-key').register({
  --  If you want to override the default filetypes that your language server will attach to you can
  --  define the property 'filetypes' to the map in question.
  local servers = {
