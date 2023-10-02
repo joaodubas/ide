@@ -125,6 +125,8 @@ ENV XDG_DATA_HOME ${HOME}/.local/share
 ENV XDG_CACHE_HOME ${HOME}/.cache
 ENV STARSHIP_CONFIG ${XDG_CONFIG_HOME}/starship/config.toml
 ENV PATH ${LOCAL_BIN_HOME}:$PATH
+# NOTE (jpd): to install elixirls we have to set the shell to something known
+ENV SHELL /usr/bin/bash
 
 # command line utilities
 RUN curl https://rtx.pub/install.sh | sh \
