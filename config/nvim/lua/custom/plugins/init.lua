@@ -56,9 +56,12 @@ return {
       }
     },
     keys = function ()
-      require('which-key').register({
-        ['<leader>t'] = { name = 'Res[t]', _ = 'which_key_ignore' }
-      })
+      local status_ok, which_key = pcall(require, 'which-key')
+      if status_ok then
+        which_key.register({
+          ['<leader>t'] = { name = 'Res[t]', _ = 'which_key_ignore' }
+        })
+      end
       return {
         { '<leader>tr', '<Plug>RestNvim', desc = 'Run the request under cursor' },
         { '<leader>tp', '<Plug>RestNvimPreview', desc = 'Preview the curl command for the request under cursor' },
