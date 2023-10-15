@@ -59,6 +59,8 @@ RUN apt-get update \
     python3-openssl \
     sudo \
     tk-dev \
+    tmux \
+    tmuxp \
     unixodbc-dev \
     unzip \
     uuid-dev \
@@ -130,7 +132,8 @@ ENV SHELL /usr/bin/bash
 
 # command line utilities
 RUN curl https://rtx.pub/install.sh | sh \
-  && curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+  && curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash \
+  && git clone https://github.com/tmux-plugins/tpm.git ${XDG_CONFIG_HOME}/tmux/plugins/tpm
 
 # git configuration
 COPY ./patch/kickstart.nvim/updates.patch /tmp

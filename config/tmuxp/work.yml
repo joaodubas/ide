@@ -1,0 +1,15 @@
+session_name: personal
+start_directory: /opt/personal
+windows:
+  - window_name: labs
+    focus: true
+    layout: even-vertical
+    start_directory: labs/
+    panes:
+      - focus: true
+      - pane 
+  - window_name: ide
+    layout: even-vertical
+    panes:
+    - focus: true
+    - pane

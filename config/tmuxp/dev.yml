@@ -1,0 +1,23 @@
+---
+session_name: dev
+start_directory: /opt/work
+windows:
+  - window_name: main
+    layout: even-vertical
+    focus: true
+    panes:
+      - focus: true
+      - pane
+  - window_name: support
+    layout: even-vertical
+    start_directory: support
+    panes:
+      - shell_command:
+        - docker compose exec pgcli bash
+      - pane
+  - window_name: local
+    layout: even-vertical
+    start_directory: local
+    panes:
+      - pane
+      - pane

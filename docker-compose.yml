@@ -9,11 +9,15 @@ services:
     entrypoint: sleep
     command: infinity
     volumes:
+      - './config/rtx:/home/coder/.config/rtx'
+      - './config/tmux:/home/coder/.config/tmux'
+      - './config/tmuxp:/home/coder/.config/tmuxp'
+      - './config/nvim/lua/custom:/home/coder/.config/nvim/lua/custom'
       - 'home_cache:/home/coder/.cache'
       - 'home_local_share:/home/coder/.local/share'
-      - './config/rtx:/home/coder/.config/rtx'
-      - './config/nvim/lua/custom:/home/coder/.config/nvim/lua/custom'
+      - 'home_plugins_tmux:/home/coder/.config/tmux/plugins'
 
 volumes:
   home_cache: {}
   home_local_share: {}
+  home_plugins_tmux: {}
