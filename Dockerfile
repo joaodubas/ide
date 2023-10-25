@@ -1,6 +1,10 @@
 FROM ubuntu:22.04
 
 # system deps
+ARG USER_UID=1000
+ARG USER_GID=1000
+ARG DOCKER_GID=999
+ARG WHEEL_GID=980
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
   && apt-get install -y software-properties-common \
@@ -71,11 +75,11 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8 \
   && echo 'setup unprivileged user' \
-  && groupadd --gid 980 wheel \
-  && groupadd --gid 999 docker \
-  && groupadd --gid 1000 coder \
+  && groupadd --gid ${WHEEL_GID} wheel \
+  && groupadd --gid ${DOCKER_GID} docker \
+  && groupadd --gid ${USER_GID} coder \
   && useradd \
-    --uid 1000 \
+    --uid ${USER_UID} \
     --gid coder \
     --groups docker,wheel \
     --shell $(which fish) \
@@ -154,13 +158,19 @@ RUN fish -c true \
   && echo 'eval "$(${XDG_DATA_HOME}/rtx/bin/rtx activate bash)"' >> ${HOME}/.bashrc \
   && echo 'eval "$(zoxide init bash)"' >> ${HOME}/.bashrc
 
+# configure git
+ARG GIT_USER_EMAIL
+ARG GIT_USER_NAME
+RUN git config --global user.email "${GIT_USER_EMAIL}" \
+  && git config --global user.name "${GIT_USER_NAME}" \
+  && git config --global core.editor nvim
+
 # install rtx plugins
 RUN ${XDG_DATA_HOME}/rtx/bin/rtx plugins install \
     awscli \
     elixir \
     erlang \
     helm \
-    jq \
     kubectl \
     poetry \
     terraform
