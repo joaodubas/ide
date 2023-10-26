@@ -85,7 +85,9 @@ return {
             python = require('iron.fts.python').ipython,
             typescript = require('iron.fts.typescript').ts
           }
-        }
+        },
+        highlight = { italic = true },
+        ignore_blank_lines = true
       })
     end
   },
