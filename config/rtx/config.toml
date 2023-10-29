@@ -1,14 +1,14 @@
 [tools]
-awscli = "2.13.5"
-elixir = "1.15.6-otp-26"
-erlang = "26.1.1"
-go = "1.20.6"
-helm = "3.12.2"
-kubectl = "1.27.4"
-node = "20.6.1"
-poetry = "1.5.1"
-python = "3.11.4"
-terraform = "1.5.4"
+awscli = "2.13.30"
+elixir = "1.15.7-otp-26"
+erlang = "26.1.2"
+go = "1.21.3"
+helm = "3.13.1"
+kubectl = "1.27.7"
+node = "21.1.0"
+poetry = "1.6.1"
+python = "3.12.0"
+terraform = "1.6.2"
 
 [settings]
 experimental = true
