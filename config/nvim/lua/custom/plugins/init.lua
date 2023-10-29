@@ -83,10 +83,10 @@ return {
       shell = vim.o.shell,
     },
     keys = function ()
-      local status_ok, which_key = pcall(require, 'which_key')
+      local status_ok, which_key = pcall(require, 'which-key')
       if status_ok then
         which_key.register({
-          ['<leader>o'] = { name = 'To[g]gle terminal', _ = 'which_key_ignore' }
+          ['<leader>o'] = { name = 'T[o]ggle terminal', _ = 'which_key_ignore' }
         })
       end
       vim.api.nvim_create_autocmd('TermOpen', {
