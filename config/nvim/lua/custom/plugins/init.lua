@@ -69,27 +69,46 @@ return {
       }
     end
   },
+  'nvim-treesitter/nvim-treesitter-context',
   {
-    'Vigemus/iron.nvim',
-    config = function ()
-      local iron = require('iron.core')
-      iron.setup({
-        config = {
-          scratch_repl = true,
-          repl_definition = {
-            sh = {
-              command = { 'fish' }
-            },
-            elixir = require('iron.fts.elixir').iex,
-            javascript = require('iron.fts.javascript').node,
-            python = require('iron.fts.python').ipython,
-            typescript = require('iron.fts.typescript').ts
-          }
-        },
-        highlight = { italic = true },
-        ignore_blank_lines = true
+    'akinsho/toggleterm.nvim',
+    opts = {
+      size = vim.o.lines * 0.3,
+      open_mapping = [[<c-\>]],
+      hide_numbers = true,
+      shade_filetypes = { },
+      shade_terminals = true,
+      shading_factor = 2,
+      direction = 'horizontal',
+      shell = vim.o.shell,
+    },
+    keys = function ()
+      local status_ok, which_key = pcall(require, 'which_key')
+      if status_ok then
+        which_key.register({
+          ['<leader>o'] = { name = 'To[g]gle terminal', _ = 'which_key_ignore' }
+        })
+      end
+      vim.api.nvim_create_autocmd('TermOpen', {
+        group = vim.api.nvim_create_augroup('kickstart-custom-term-open-mapping', { clear = true }),
+        callback = function (args)
+          local bufnr = args.buf
+          local opts = { buffer = bufnr }
+          vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], opts)
+          vim.keymap.set('t', 'jk', [[<C-\><C-n>]], opts)
+          vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
+          vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
+          vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
+          vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
+          vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]], opts)
+        end
       })
+      return {
+        { '<leader>oh', '<cmd>ToggleTerm direction=horizontal size=' .. tostring(vim.o.lines * 0.3) .. '<cr>', desc = 'Open terminal horizontally' },
+        { '<leader>oc', '<cmd>ToggleTermSendCurrentLine<cr>', desc = 'Send current line under the cursor' },
+        { '<leader>ov', '<cmd>ToggleTermSendVisualLines<cr>', desc = 'Send all lines visually selected' },
+        { '<leader>os', '<cmd>ToggleTermSendVisualSelection<cr>', desc = 'Send visually selected text' }
+      }
     end
-  },
-  'nvim-treesitter/nvim-treesitter-context'
+  }
 }
