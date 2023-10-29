@@ -174,3 +174,16 @@ RUN ${XDG_DATA_HOME}/rtx/bin/rtx plugins install \
     kubectl \
     poetry \
     terraform
+
+# configure openssl 1.1
+# this is needed to compile older erlang versions
+# example: KERL_CONFIGURE_OPTIONS="-with-ssl=${HOME}/.local/lib/ssl" asdf install
+RUN mkdir -p ${HOME}/.local/src \
+  && cd ${HOME}/.local/src \
+  && wget https://www.openssl.org/source/openssl-1.1.1m.tar.gz \
+  && tar -xzf openssl-1.1.1m.tar.gz \
+  && cd openssl-1.1.1m \
+  && ./config --prefix=${HOME}/.local/lib/ssl --openssldir=${HOME}/.local/lib/ssl shared zlib \
+  && make \
+  # && make test \
+  && make install
