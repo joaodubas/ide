@@ -172,6 +172,7 @@ RUN ${XDG_DATA_HOME}/rtx/bin/rtx plugins install \
     erlang \
     helm \
     kubectl \
+    lefthook \
     poetry \
     terraform
 
