@@ -86,7 +86,7 @@ return {
       local status_ok, which_key = pcall(require, 'which-key')
       if status_ok then
         which_key.register({
-          ['<leader>o'] = { name = 'T[o]ggle terminal', _ = 'which_key_ignore' }
+          ['<leader>m'] = { name = 'Toggle ter[m]inal', _ = 'which_key_ignore' }
         })
       end
       vim.api.nvim_create_autocmd('TermOpen', {
@@ -104,10 +104,8 @@ return {
         end
       })
       return {
-        { '<leader>oh', '<cmd>ToggleTerm direction=horizontal size=' .. tostring(vim.o.lines * 0.3) .. '<cr>', desc = 'Open terminal horizontally' },
-        { '<leader>oc', '<cmd>ToggleTermSendCurrentLine<cr>', desc = 'Send current line under the cursor' },
-        { '<leader>ov', '<cmd>ToggleTermSendVisualLines<cr>', desc = 'Send all lines visually selected' },
-        { '<leader>os', '<cmd>ToggleTermSendVisualSelection<cr>', desc = 'Send visually selected text' }
+        { '<leader>mh', '<cmd>ToggleTerm direction=horizontal size=' .. tostring(vim.o.lines * 0.4) .. '<cr>', desc = 'Open ter[m]inal [h]orizontally', noremap = true },
+        { '<leader>mc', '<cmd>ToggleTermSendCurrentLine<cr>', desc = 'Send [c]urrent line under the cursor', noremap = true }
       }
     end
   }

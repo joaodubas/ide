@@ -1,8 +1,8 @@
 diff --git a/init.lua b/init.lua
-index a7667dd..6bf8654 100644
+index 748e7f8..47e327a 100644
 --- a/init.lua
 +++ b/init.lua
-@@ -227,7 +227,7 @@ require('lazy').setup({
+@@ -229,7 +229,7 @@ require('lazy').setup({
    --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
    --
    --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
@@ -11,7 +11,7 @@ index a7667dd..6bf8654 100644
  }, {})
  
  -- [[ Setting options ]]
-@@ -237,11 +237,12 @@ require('lazy').setup({
+@@ -239,11 +239,12 @@ require('lazy').setup({
  -- Set highlight on search
  vim.o.hlsearch = false
  
@@ -27,7 +27,7 @@ index a7667dd..6bf8654 100644
  
  -- Sync clipboard between OS and Neovim.
  --  Remove this option if you want your OS clipboard to remain independent.
-@@ -271,6 +272,14 @@ vim.o.completeopt = 'menuone,noselect'
+@@ -273,6 +274,14 @@ vim.o.completeopt = 'menuone,noselect'
  -- NOTE: You should make sure your terminal supports this
  vim.o.termguicolors = true
  
@@ -42,7 +42,7 @@ index a7667dd..6bf8654 100644
  -- [[ Basic Keymaps ]]
  
  -- Keymaps for better default experience
-@@ -333,11 +342,29 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc =
+@@ -378,11 +387,29 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc =
  vim.defer_fn(function()
    require('nvim-treesitter.configs').setup {
      -- Add languages to be installed here that you want installed for treesitter
@@ -75,7 +75,7 @@ index a7667dd..6bf8654 100644
      highlight = { enable = true },
      indent = { enable = true },
      incremental_selection = {
-@@ -472,19 +499,24 @@ require('mason-lspconfig').setup()
+@@ -511,19 +538,24 @@ require('mason-lspconfig').setup()
  --  If you want to override the default filetypes that your language server will attach to you can
  --  define the property 'filetypes' to the map in question.
  local servers = {
