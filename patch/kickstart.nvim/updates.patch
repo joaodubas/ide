@@ -1,5 +1,5 @@
 diff --git a/init.lua b/init.lua
-index 748e7f8..47e327a 100644
+index 748e7f8145427b7f17639d4c9f978b9bbe47d2c9..7d05ed25928e7526b02da1671068cdaa24ebc240 100644
 --- a/init.lua
 +++ b/init.lua
 @@ -229,7 +229,7 @@ require('lazy').setup({
@@ -107,3 +107,25 @@ index 748e7f8..47e327a 100644
  }
  
  -- Setup neovim lua configuration
+@@ -542,12 +574,20 @@ mason_lspconfig.setup {
+ 
+ mason_lspconfig.setup_handlers {
+   function(server_name)
+-    require('lspconfig')[server_name].setup {
++    local opts = {
+       capabilities = capabilities,
+       on_attach = on_attach,
+       settings = servers[server_name],
+       filetypes = (servers[server_name] or {}).filetypes,
+     }
++    if server_name == 'elixirls' then
++      local version = vim.fn.system('rtx current elixir') or ''
++      local match_version = string.match(version, '^1.11')
++      if  match_version ~= nil then
++        opts = vim.tbl_extend('keep', opts, { cmd = { vim.fn.expand('$LOCAL_SRC_HOME') .. '/elixir-ls/release/language_server.sh' } })
++      end
++    end
++    require('lspconfig')[server_name].setup(opts)
+   end,
+ }
+ 

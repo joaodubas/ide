@@ -176,6 +176,9 @@ RUN ${XDG_DATA_HOME}/rtx/bin/rtx plugins install \
     poetry \
     terraform
 
+# NOTE (jpd): the section below exists mainly to handle a project running elixir 1.11.
+# It allows the usage of openssl 1.1 and a compatible elixir-ls.
+
 # configure openssl 1.1
 # this is needed to compile older erlang versions
 # example: KERL_CONFIGURE_OPTIONS="-with-ssl=${HOME}/.local/lib/ssl" asdf install
@@ -188,3 +191,14 @@ RUN mkdir -p ${HOME}/.local/src \
   && make \
   # && make test \
   && make install
+
+# fetch elixir-ls compatible with elixir 1.11.x
+# to setup this project run the following commands:
+# mix do local.rebar --force, local.hex --force
+# mix do deps.get, deps.compile
+# MIX_ENV=prod mix compile
+# MIX_ENV=prod mix elixir_ls.release
+RUN git clone https://github.com/elixir-lsp/elixir-ls.git ${LOCAL_SRC_HOME}/elixir-ls \
+  && cd ${LOCAL_SRC_HOME}/elixir-ls \
+  && git checkout tags/v0.12.0 \
+  && cp .release-tool-versions .tool-versions
