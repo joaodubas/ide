@@ -144,7 +144,7 @@ COPY ./patch/kickstart.nvim/updates.patch /tmp
 COPY ./config/nvim/lua/custom/plugins/init.lua /tmp
 RUN git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME}"/nvim \
   && cd ${XDG_CONFIG_HOME}/nvim \
-  && git reset --hard a005f15cec8072c97201f86e15df62c7e4a4490e \
+  && git reset --hard 1915cea32e13fcb4191904de8f5e0252ad050a6e \
   && git apply /tmp/updates.patch \
   && cp /tmp/init.lua ${XDG_CONFIG_HOME}/nvim/lua/custom/plugins \
   && nvim --headless "+Lazy! sync" +qa
@@ -154,9 +154,10 @@ RUN fish -c true \
   && echo 'starship init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo '{$XDG_DATA_HOME}/rtx/bin/rtx activate fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'zoxide init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo 'eval "$(starship init bash)"' >> ${HOME}/.bashrc \
-  && echo 'eval "$(${XDG_DATA_HOME}/rtx/bin/rtx activate bash)"' >> ${HOME}/.bashrc \
-  && echo 'eval "$(zoxide init bash)"' >> ${HOME}/.bashrc
+  && echo 'alias cat="bat"' >> ${XDG_CONFIG_HOME}/fish/config.fish ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias l="exa --time-style long-iso --color=auto -F"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias ll="l -Fahl"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias la="l -a"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
 
 # configure git
 ARG GIT_USER_EMAIL
@@ -174,7 +175,8 @@ RUN ${XDG_DATA_HOME}/rtx/bin/rtx plugins install \
     kubectl \
     lefthook \
     poetry \
-    terraform
+    terraform \
+    tilt
 
 # NOTE (jpd): the section below exists mainly to handle a project running elixir 1.11.
 # It allows the usage of openssl 1.1 and a compatible elixir-ls.

@@ -1,5 +1,5 @@
 diff --git a/init.lua b/init.lua
-index 748e7f8145427b7f17639d4c9f978b9bbe47d2c9..7d05ed25928e7526b02da1671068cdaa24ebc240 100644
+index 3a98da0..e8e41b4 100644
 --- a/init.lua
 +++ b/init.lua
 @@ -229,7 +229,7 @@ require('lazy').setup({
@@ -42,7 +42,7 @@ index 748e7f8145427b7f17639d4c9f978b9bbe47d2c9..7d05ed25928e7526b02da1671068cdaa
  -- [[ Basic Keymaps ]]
  
  -- Keymaps for better default experience
-@@ -378,11 +387,29 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc =
+@@ -378,11 +387,33 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc =
  vim.defer_fn(function()
    require('nvim-treesitter.configs').setup {
      -- Add languages to be installed here that you want installed for treesitter
@@ -54,6 +54,7 @@ index 748e7f8145427b7f17639d4c9f978b9bbe47d2c9..7d05ed25928e7526b02da1671068cdaa
 +      'eex',
 +      'elixir',
 +      'erlang',
++      'gitcommit',
 +      'go',
 +      'heex',
 +      'html',
@@ -62,12 +63,15 @@ index 748e7f8145427b7f17639d4c9f978b9bbe47d2c9..7d05ed25928e7526b02da1671068cdaa
 +      'json',
 +      'lua',
 +      'markdown',
++      'markdown_inline',
 +      'python',
 +      'sql',
++      'toml',
 +      'tsx',
 +      'typescript',
 +      'vim',
-+      'vimdoc'
++      'vimdoc',
++      'yaml'
 +    },
      -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
      auto_install = false,
@@ -75,7 +79,7 @@ index 748e7f8145427b7f17639d4c9f978b9bbe47d2c9..7d05ed25928e7526b02da1671068cdaa
      highlight = { enable = true },
      indent = { enable = true },
      incremental_selection = {
-@@ -511,19 +538,24 @@ require('mason-lspconfig').setup()
+@@ -511,19 +542,24 @@ require('mason-lspconfig').setup()
  --  If you want to override the default filetypes that your language server will attach to you can
  --  define the property 'filetypes' to the map in question.
  local servers = {
@@ -107,7 +111,7 @@ index 748e7f8145427b7f17639d4c9f978b9bbe47d2c9..7d05ed25928e7526b02da1671068cdaa
  }
  
  -- Setup neovim lua configuration
-@@ -542,12 +574,20 @@ mason_lspconfig.setup {
+@@ -542,12 +578,20 @@ mason_lspconfig.setup {
  
  mason_lspconfig.setup_handlers {
    function(server_name)

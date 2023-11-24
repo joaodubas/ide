@@ -1,15 +1,16 @@
 [tools]
-awscli = "2.13.30"
+awscli = "2.13.38"
 elixir = "1.15.7-otp-26"
 erlang = "26.1.2"
-go = "1.21.3"
-helm = "3.13.1"
-kubectl = "1.27.7"
-lefthook = "1.5.2"
-node = "21.1.0"
-poetry = "1.6.1"
+go = "1.21.4"
+helm = "3.13.2"
+kubectl = "1.28.4"
+lefthook = "1.5.3"
+node = "21.2.0"
+poetry = "1.7.1"
 python = "3.12.0"
-terraform = "1.6.2"
+terraform = "1.6.4"
+tilt = "0.33.6"
 
 [settings]
 experimental = true

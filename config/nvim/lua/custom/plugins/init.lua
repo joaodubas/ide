@@ -73,7 +73,7 @@ return {
   {
     'akinsho/toggleterm.nvim',
     opts = {
-      size = vim.o.lines * 0.3,
+      size = vim.o.lines * 0.75,
       open_mapping = [[<c-\>]],
       hide_numbers = true,
       shade_filetypes = { },
@@ -104,7 +104,8 @@ return {
         end
       })
       return {
-        { '<leader>mh', '<cmd>ToggleTerm direction=horizontal size=' .. tostring(vim.o.lines * 0.4) .. '<cr>', desc = 'Open ter[m]inal [h]orizontally', noremap = true },
+        { '<leader>mh', '<cmd>ToggleTerm direction=horizontal size=' .. tostring(vim.o.lines * 0.75) .. '<cr>', desc = 'Open ter[m]inal [h]orizontally', noremap = true },
+        { '<leader>mv', '<cmd>ToggleTerm direction=vertical size=' .. tostring(vim.o.columns * 0.5) .. '<cr>', desc = 'Open ter[m]inal [v]ertically', noremap = true },
         { '<leader>mc', '<cmd>ToggleTermSendCurrentLine<cr>', desc = 'Send [c]urrent line under the cursor', noremap = true }
       }
     end
