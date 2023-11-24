@@ -154,10 +154,10 @@ RUN fish -c true \
   && echo 'starship init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo '{$XDG_DATA_HOME}/rtx/bin/rtx activate fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'zoxide init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo 'alias cat="bat"' >> ${XDG_CONFIG_HOME}/fish/config.fish ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias cat="bat"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'alias l="exa --time-style long-iso --color=auto -F"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'alias ll="l -Fahl"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo 'alias la="l -a"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias la="l -a"' >> ${XDG_CONFIG_HOME}/fish/config.fish
 
 # configure git
 ARG GIT_USER_EMAIL
