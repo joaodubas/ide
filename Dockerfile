@@ -131,8 +131,6 @@ ENV XDG_DATA_HOME ${HOME}/.local/share
 ENV XDG_CACHE_HOME ${HOME}/.cache
 ENV STARSHIP_CONFIG ${XDG_CONFIG_HOME}/starship/config.toml
 ENV PATH ${LOCAL_BIN_HOME}:$PATH
-# NOTE (jpd): to install elixirls we have to set the shell to something known
-ENV SHELL /usr/bin/bash
 
 # command line utilities
 RUN curl https://rtx.pub/install.sh | sh \
@@ -194,13 +192,17 @@ RUN mkdir -p ${HOME}/.local/src \
   # && make test \
   && make install
 
-# fetch elixir-ls compatible with elixir 1.11.x
+# fetch elixir-ls compatible with elixir 1.11.x and 1.12.x
 # to setup this project run the following commands:
 # mix do local.rebar --force, local.hex --force
 # mix do deps.get, deps.compile
 # MIX_ENV=prod mix compile
 # MIX_ENV=prod mix elixir_ls.release
-RUN git clone https://github.com/elixir-lsp/elixir-ls.git ${LOCAL_SRC_HOME}/elixir-ls \
-  && cd ${LOCAL_SRC_HOME}/elixir-ls \
+RUN git clone https://github.com/elixir-lsp/elixir-ls.git ${LOCAL_SRC_HOME}/elixir-ls/v0.12.0 \
+  && cd ${LOCAL_SRC_HOME}/elixir-ls/v0.12.0 \
   && git checkout tags/v0.12.0 \
+  && cp .release-tool-versions .tool-versions \
+  && git clone https://github.com/elixir-lsp/elixir-ls.git ${LOCAL_SRC_HOME}/elixir-ls/v0.14.6 \
+  && cd ${LOCAL_SRC_HOME}/elixir-ls/v0.14.6 \
+  && git checkout tags/v0.14.6 \
   && cp .release-tool-versions .tool-versions
