@@ -59,6 +59,7 @@ RUN apt-get update \
     net-tools \
     openssh-client \
     openssl \
+    parallel \
     pkg-config \
     python3-openssl \
     sudo \
