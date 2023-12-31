@@ -1,8 +1,10 @@
+:100644 100644 7e68de6 0000000 M	init.lua
+
 diff --git a/init.lua b/init.lua
-index 3a98da0..e8c5b7d 100644
+index 7e68de6..f886b8a 100644
 --- a/init.lua
 +++ b/init.lua
-@@ -229,7 +229,7 @@ require('lazy').setup({
+@@ -266,7 +266,7 @@ require('lazy').setup({
    --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
    --
    --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
@@ -11,7 +13,7 @@ index 3a98da0..e8c5b7d 100644
  }, {})
  
  -- [[ Setting options ]]
-@@ -239,11 +239,12 @@ require('lazy').setup({
+@@ -276,11 +276,12 @@ require('lazy').setup({
  -- Set highlight on search
  vim.o.hlsearch = false
  
@@ -27,7 +29,7 @@ index 3a98da0..e8c5b7d 100644
  
  -- Sync clipboard between OS and Neovim.
  --  Remove this option if you want your OS clipboard to remain independent.
-@@ -273,6 +274,14 @@ vim.o.completeopt = 'menuone,noselect'
+@@ -310,6 +311,14 @@ vim.o.completeopt = 'menuone,noselect'
  -- NOTE: You should make sure your terminal supports this
  vim.o.termguicolors = true
  
@@ -42,7 +44,7 @@ index 3a98da0..e8c5b7d 100644
  -- [[ Basic Keymaps ]]
  
  -- Keymaps for better default experience
-@@ -378,11 +387,33 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc =
+@@ -423,11 +432,33 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc =
  vim.defer_fn(function()
    require('nvim-treesitter.configs').setup {
      -- Add languages to be installed here that you want installed for treesitter
@@ -79,7 +81,7 @@ index 3a98da0..e8c5b7d 100644
      highlight = { enable = true },
      indent = { enable = true },
      incremental_selection = {
-@@ -511,19 +542,24 @@ require('mason-lspconfig').setup()
+@@ -563,13 +594,16 @@ require('mason-lspconfig').setup()
  --  If you want to override the default filetypes that your language server will attach to you can
  --  define the property 'filetypes' to the map in question.
  local servers = {
@@ -103,7 +105,8 @@ index 3a98da0..e8c5b7d 100644
    lua_ls = {
      Lua = {
        workspace = { checkThirdParty = false },
-       telemetry = { enable = false },
+@@ -578,6 +612,8 @@ local servers = {
+       -- diagnostics = { disable = { 'missing-fields' } },
      },
    },
 +  pyright = {},
@@ -111,7 +114,7 @@ index 3a98da0..e8c5b7d 100644
  }
  
  -- Setup neovim lua configuration
-@@ -542,12 +578,23 @@ mason_lspconfig.setup {
+@@ -596,12 +632,23 @@ mason_lspconfig.setup {
  
  mason_lspconfig.setup_handlers {
    function(server_name)
