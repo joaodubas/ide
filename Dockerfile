@@ -91,15 +91,15 @@ RUN apt-get update \
   && echo 'permit persist :wheel as root' > /etc/doas.conf
 
 # command line utilities
-ENV BAT_VERSION 0.23.0
+ENV BAT_VERSION 0.24.0
 ENV BAT_FILE bat_${BAT_VERSION}_amd64.deb
 ENV BAT_URL https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${BAT_FILE}
-ENV RG_VERSION 13.0.0
+ENV RG_VERSION 14.0.3
 ENV RG_FILE ripgrep_${RG_VERSION}_amd64.deb
 ENV RG_URL https://github.com/BurntSushi/ripgrep/releases/download/${RG_VERSION}/${RG_FILE}
-ENV DO_VERSION 24.0.6
+ENV DO_VERSION 24.0.7
 ENV DO_URL https://download.docker.com/linux/static/stable/x86_64/docker-${DO_VERSION}.tgz
-ENV DC_VERSION v2.21.0
+ENV DC_VERSION v2.23.3
 ENV DC_URL https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-linux-x86_64
 RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes \
   && curl -LO ${BAT_URL} \
