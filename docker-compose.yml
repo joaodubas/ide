@@ -10,15 +10,17 @@ services:
     command: infinity
     volumes:
       - './config/nvim/lua/custom:/home/coder/.config/nvim/lua/custom'
-      - './config/rtx:/home/coder/.config/rtx'
+      - './config/mise:/home/coder/.config/mise'
       - './config/starship:/home/coder/.config/starship'
       - './config/tmux:/home/coder/.config/tmux'
       - './config/tmuxp:/home/coder/.config/tmuxp'
       - 'home_cache:/home/coder/.cache'
       - 'home_local_share:/home/coder/.local/share'
+      - 'home_local_state:/home/coder/.local/state'
       - 'home_plugins_tmux:/home/coder/.config/tmux/plugins'
 
 volumes:
   home_cache: {}
   home_local_share: {}
+  home_local_state: {}
   home_plugins_tmux: {}

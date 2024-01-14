@@ -1,7 +1,5 @@
-:100644 100644 7e68de6 0000000 M	init.lua
-
 diff --git a/init.lua b/init.lua
-index 7e68de6..f886b8a 100644
+index 1ff16af..2ef9591 100644
 --- a/init.lua
 +++ b/init.lua
 @@ -266,7 +266,7 @@ require('lazy').setup({
@@ -44,7 +42,7 @@ index 7e68de6..f886b8a 100644
  -- [[ Basic Keymaps ]]
  
  -- Keymaps for better default experience
-@@ -423,11 +432,33 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc =
+@@ -423,8 +432,31 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc =
  vim.defer_fn(function()
    require('nvim-treesitter.configs').setup {
      -- Add languages to be installed here that you want installed for treesitter
@@ -77,11 +75,8 @@ index 7e68de6..f886b8a 100644
 +    },
      -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
      auto_install = false,
--
-     highlight = { enable = true },
-     indent = { enable = true },
-     incremental_selection = {
-@@ -563,13 +594,16 @@ require('mason-lspconfig').setup()
+     -- Install languages synchronously (only applied to `ensure_installed`)
+@@ -568,13 +600,16 @@ require('mason-lspconfig').setup()
  --  If you want to override the default filetypes that your language server will attach to you can
  --  define the property 'filetypes' to the map in question.
  local servers = {
@@ -105,7 +100,7 @@ index 7e68de6..f886b8a 100644
    lua_ls = {
      Lua = {
        workspace = { checkThirdParty = false },
-@@ -578,6 +612,8 @@ local servers = {
+@@ -583,6 +618,8 @@ local servers = {
        -- diagnostics = { disable = { 'missing-fields' } },
      },
    },
@@ -114,7 +109,7 @@ index 7e68de6..f886b8a 100644
  }
  
  -- Setup neovim lua configuration
-@@ -596,12 +632,23 @@ mason_lspconfig.setup {
+@@ -601,12 +638,23 @@ mason_lspconfig.setup {
  
  mason_lspconfig.setup_handlers {
    function(server_name)
@@ -126,13 +121,13 @@ index 7e68de6..f886b8a 100644
        filetypes = (servers[server_name] or {}).filetypes,
      }
 +    if server_name == 'elixirls' then
-+      local version = vim.fn.system('rtx current elixir') or ''
++      local version = vim.fn.system('mise current elixir') or ''
 +      local match_version_111 = string.match(version, '^1.11')
 +      local match_version_112 = string.match(version, '^1.12')
 +      if  match_version_111 ~= nil then
-+        opts = vim.tbl_extend('keep', opts, { cmd = { vim.fn.expand('$LOCAL_SRC_HOME') .. '/elixir-ls/v0.12.0/release/language_server.sh' } })
++        opts = vim.tbl_extend('keep', opts, { cmd = { vim.fn.expand('$LOCAL_SRC_HOME') .. '/elixir-ls/release/v0.12.0/language_server.sh' } })
 +      elseif match_version_112 ~= nil then
-+        opts = vim.tbl_extend('keep', opts, { cmd = { vim.fn.expand('$LOCAL_SRC_HOME') .. '/elixir-ls/v0.14.6/release/language_server.sh' } })
++        opts = vim.tbl_extend('keep', opts, { cmd = { vim.fn.expand('$LOCAL_SRC_HOME') .. '/elixir-ls/release/v0.14.6/language_server.sh' } })
 +      end
 +    end
 +    require('lspconfig')[server_name].setup(opts)

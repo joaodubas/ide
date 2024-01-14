@@ -18,7 +18,6 @@ RUN apt-get update \
     ca-certificates \
     curl \
     doas \
-    exa \
     fish \
     g++ \
     gcc \
@@ -91,23 +90,11 @@ RUN apt-get update \
   && echo 'permit persist :wheel as root' > /etc/doas.conf
 
 # command line utilities
-ENV BAT_VERSION 0.24.0
-ENV BAT_FILE bat_${BAT_VERSION}_amd64.deb
-ENV BAT_URL https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/${BAT_FILE}
-ENV RG_VERSION 14.0.3
-ENV RG_FILE ripgrep_${RG_VERSION}_amd64.deb
-ENV RG_URL https://github.com/BurntSushi/ripgrep/releases/download/${RG_VERSION}/${RG_FILE}
 ENV DO_VERSION 24.0.7
 ENV DO_URL https://download.docker.com/linux/static/stable/x86_64/docker-${DO_VERSION}.tgz
 ENV DC_VERSION v2.23.3
 ENV DC_URL https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-linux-x86_64
 RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes \
-  && curl -LO ${BAT_URL} \
-  && dpkg -i ${BAT_FILE} \
-  && rm ${BAT_FILE} \
-  && curl -LO ${RG_URL} \
-  && dpkg -i ${RG_FILE} \
-  && rm ${RG_FILE} \
   && mkdir /tmp/download \
   && curl -L ${DO_URL} | tar -zx -C /tmp/download \
   && chgrp --recursive docker /tmp/download \
@@ -133,8 +120,26 @@ ENV XDG_CACHE_HOME ${HOME}/.cache
 ENV STARSHIP_CONFIG ${XDG_CONFIG_HOME}/starship/config.toml
 ENV PATH ${LOCAL_BIN_HOME}:$PATH
 
+# NOTE (jpd): the section below exists mainly to handle a project running elixir 1.11.
+# It allows the usage of openssl 1.1 and a compatible elixir-ls.
+
+# configure openssl 1.1
+# this is needed to compile older erlang versions
+# example: KERL_CONFIGURE_OPTIONS="-with-ssl=$HOME/.local/lib/ssl" mise install
+RUN mkdir -p ${HOME}/.local/src \
+  && cd ${HOME}/.local/src \
+  && curl -L https://www.openssl.org/source/openssl-1.1.1m.tar.gz | tar -xz \
+  && cd openssl-1.1.1m \
+  && ./config --prefix=${HOME}/.local/lib/ssl --openssldir=${HOME}/.local/lib/ssl shared zlib \
+  && make \
+  # && make test \
+  && make install
+
+# fetch elixir-ls to install custom releases
+RUN git clone https://github.com/elixir-lsp/elixir-ls.git ${LOCAL_SRC_HOME}/elixir-ls
+
 # command line utilities
-RUN curl https://rtx.pub/install.sh | sh \
+RUN curl https://mise.jdx.dev/install.sh | sh \
   && curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash \
   && git clone https://github.com/tmux-plugins/tpm.git ${XDG_CONFIG_HOME}/tmux/plugins/tpm
 
@@ -143,7 +148,7 @@ COPY ./patch/kickstart.nvim/updates.patch /tmp
 COPY ./config/nvim/lua/custom/plugins/init.lua /tmp
 RUN git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME}"/nvim \
   && cd ${XDG_CONFIG_HOME}/nvim \
-  && git reset --hard 4d0dc8d4b1bd6b94e59f7773158149bb1b0ee5be \
+  && git reset --hard 2510c29d62d39d63bb75f1a613d2ae628a2af4ee \
   && git apply /tmp/updates.patch \
   && cp /tmp/init.lua ${XDG_CONFIG_HOME}/nvim/lua/custom/plugins \
   && nvim --headless "+Lazy! sync" +qa
@@ -151,10 +156,10 @@ RUN git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME}
 # configure fish and bash
 RUN fish -c true \
   && echo 'starship init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo '{$XDG_DATA_HOME}/rtx/bin/rtx activate fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo '{$LOCAL_BIN_HOME}/mise activate fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'zoxide init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'alias cat="bat"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo 'alias l="exa --time-style long-iso --color=auto -F"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias l="eza --time-style long-iso --color=auto -F"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'alias ll="l -Fahl"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'alias la="l -a"' >> ${XDG_CONFIG_HOME}/fish/config.fish
 
@@ -166,44 +171,28 @@ RUN git config --global user.email "${GIT_USER_EMAIL}" \
   && git config --global core.editor nvim
 
 # install rtx plugins
-RUN ${XDG_DATA_HOME}/rtx/bin/rtx plugins install \
+RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
     awscli \
+    bat \
+    dagger \
     elixir \
     erlang \
+    eza \
+    fzf \
     helm \
+    k3d \
     kubectl \
+    kubie \
     lefthook \
     poetry \
+    ripgrep \
+    starship \
     terraform \
-    tilt
+    tilt \
+    tmux \
+    usql \
+    yarn \
+    zoxide
 
-# NOTE (jpd): the section below exists mainly to handle a project running elixir 1.11.
-# It allows the usage of openssl 1.1 and a compatible elixir-ls.
-
-# configure openssl 1.1
-# this is needed to compile older erlang versions
-# example: KERL_CONFIGURE_OPTIONS="-with-ssl=${HOME}/.local/lib/ssl" asdf install
-RUN mkdir -p ${HOME}/.local/src \
-  && cd ${HOME}/.local/src \
-  && wget https://www.openssl.org/source/openssl-1.1.1m.tar.gz \
-  && tar -xzf openssl-1.1.1m.tar.gz \
-  && cd openssl-1.1.1m \
-  && ./config --prefix=${HOME}/.local/lib/ssl --openssldir=${HOME}/.local/lib/ssl shared zlib \
-  && make \
-  # && make test \
-  && make install
-
-# fetch elixir-ls compatible with elixir 1.11.x and 1.12.x
-# to setup this project run the following commands:
-# mix do local.rebar --force, local.hex --force
-# mix do deps.get, deps.compile
-# MIX_ENV=prod mix compile
-# MIX_ENV=prod mix elixir_ls.release
-RUN git clone https://github.com/elixir-lsp/elixir-ls.git ${LOCAL_SRC_HOME}/elixir-ls/v0.12.0 \
-  && cd ${LOCAL_SRC_HOME}/elixir-ls/v0.12.0 \
-  && git checkout tags/v0.12.0 \
-  && cp .release-tool-versions .tool-versions \
-  && git clone https://github.com/elixir-lsp/elixir-ls.git ${LOCAL_SRC_HOME}/elixir-ls/v0.14.6 \
-  && cd ${LOCAL_SRC_HOME}/elixir-ls/v0.14.6 \
-  && git checkout tags/v0.14.6 \
-  && cp .release-tool-versions .tool-versions
+COPY ./scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+COPY ./scripts/elixir-ls-setup.sh /usr/local/bin/elixir-ls-setup
