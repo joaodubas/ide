@@ -143,16 +143,6 @@ RUN curl https://mise.jdx.dev/install.sh | sh \
   && curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash \
   && git clone https://github.com/tmux-plugins/tpm.git ${XDG_CONFIG_HOME}/tmux/plugins/tpm
 
-# git configuration
-COPY ./patch/kickstart.nvim/updates.patch /tmp
-COPY ./config/nvim/lua/custom/plugins/init.lua /tmp
-RUN git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME}"/nvim \
-  && cd ${XDG_CONFIG_HOME}/nvim \
-  && git reset --hard 2510c29d62d39d63bb75f1a613d2ae628a2af4ee \
-  && git apply /tmp/updates.patch \
-  && cp /tmp/init.lua ${XDG_CONFIG_HOME}/nvim/lua/custom/plugins \
-  && nvim --headless "+Lazy! sync" +qa
-
 # configure fish and bash
 RUN fish -c true \
   && echo 'starship init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
@@ -163,12 +153,15 @@ RUN fish -c true \
   && echo 'alias ll="l -Fahl"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'alias la="l -a"' >> ${XDG_CONFIG_HOME}/fish/config.fish
 
-# configure git
-ARG GIT_USER_EMAIL
-ARG GIT_USER_NAME
-RUN git config --global user.email "${GIT_USER_EMAIL}" \
-  && git config --global user.name "${GIT_USER_NAME}" \
-  && git config --global core.editor nvim
+# git configuration
+COPY ./patch/kickstart.nvim/updates.patch /tmp
+COPY ./config/nvim/lua/custom/plugins/init.lua /tmp
+RUN git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME}"/nvim \
+  && cd ${XDG_CONFIG_HOME}/nvim \
+  && git reset --hard b11581491671ed49b1dfdb1ea777932ade7ff2e5 \
+  && git apply /tmp/updates.patch \
+  && cp /tmp/init.lua ${XDG_CONFIG_HOME}/nvim/lua/custom/plugins \
+  && nvim --headless "+Lazy! sync" +qa
 
 # install rtx plugins
 RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
@@ -193,6 +186,13 @@ RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
     usql \
     yarn \
     zoxide
+
+# configure git
+ARG GIT_USER_EMAIL
+ARG GIT_USER_NAME
+RUN git config --global user.email "${GIT_USER_EMAIL}" \
+  && git config --global user.name "${GIT_USER_NAME}" \
+  && git config --global core.editor nvim
 
 COPY ./scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 COPY ./scripts/elixir-ls-setup.sh /usr/local/bin/elixir-ls-setup
