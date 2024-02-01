@@ -4,6 +4,14 @@
 -- See the kickstart.nvim README for more information
 return {
   {
+    'mgoral/vim-bw',
+    url = 'https://git.goral.net.pl/mgoral/vim-bw.git',
+    priority = 1000,
+    config = function ()
+      vim.cmd.colorscheme 'bw-onedark'
+    end
+  },
+  {
     'joaodubas/gitlinker.nvim',
     config = function ()
       local actions = require('gitlinker.actions')
@@ -23,6 +31,65 @@ return {
         mappings = "<leader>gy"
       })
     end
+  },
+  'nvim-treesitter/nvim-treesitter-context',
+  {
+    'kevinhwang91/nvim-ufo',
+    dependencies = { 'kevinhwang91/promise-async' },
+    event = 'BufRead',
+    keys = function ()
+      local ufo = require('ufo')
+      return {
+        { 'zR', ufo.openAllFolds, { desc = "Open all folds" } },
+        { 'zM', ufo.closeAllFolds, { desc = "Close all folds" } },
+        { 'zr', ufo.openFoldsExceptKinds, { desc = "Open fold" } },
+        { 'zm', ufo.closeFoldsWith, { desc = "Close fold" } },
+      }
+    end,
+    opts = function ()
+      local handler = function (virtText, lnum, endLnum, width, truncate)
+        local newVirtText = {}
+        local suffix = (' 󰁂 %d '):format(endLnum - lnum)
+        local sufWidth = vim.fn.strdisplaywidth(suffix)
+        local targetWidth = width - sufWidth
+        local curWidth = 0
+        for _, chunk in ipairs(virtText) do
+          local chunkText = chunk[1]
+          local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+          if targetWidth > curWidth + chunkWidth then
+            table.insert(newVirtText, chunk)
+          else
+            chunkText = truncate(chunkText, targetWidth - curWidth)
+            local hlGroup = chunk[2]
+            table.insert(newVirtText, {chunkText, hlGroup})
+            chunkWidth = vim.fn.strdisplaywidth(chunkText)
+            -- str width returned from truncate() may less than 2nd argument, need padding
+            if curWidth + chunkWidth < targetWidth then
+                suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
+            end
+            break
+          end
+          curWidth = curWidth + chunkWidth
+        end
+        table.insert(newVirtText, { suffix, 'MoreMsg' })
+        return newVirtText
+      end
+
+      return {
+        fold_virt_text_handler = handler,
+        provider_selector = function (_, _, _)
+          return { 'treesitter', 'indent' }
+        end
+      }
+    end,
+  },
+  {
+    'stevearc/oil.nvim',
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    keys = {
+      { '-', '<cmd>Oil<cr>', desc = "Open parent directory" },
+    },
+    opts = {},
   },
   {
     'rest-nvim/rest.nvim',
@@ -69,7 +136,6 @@ return {
       }
     end
   },
-  'nvim-treesitter/nvim-treesitter-context',
   {
     'akinsho/toggleterm.nvim',
     opts = {
@@ -109,13 +175,5 @@ return {
         { '<leader>mc', '<cmd>ToggleTermSendCurrentLine<cr>', desc = 'Send [c]urrent line under the cursor', noremap = true }
       }
     end
-  },
-  {
-    'stevearc/oil.nvim',
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    keys = {
-      { '-', '<cmd>Oil<cr>', desc = "Open parent directory" },
-    },
-    opts = {},
   },
 }
