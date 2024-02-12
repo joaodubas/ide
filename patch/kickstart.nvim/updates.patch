@@ -1,8 +1,8 @@
 diff --git a/init.lua b/init.lua
-index 6c6ae02..233e6b1 100644
+index fd4567d..236fb97 100644
 --- a/init.lua
 +++ b/init.lua
-@@ -189,19 +189,19 @@ require('lazy').setup({
+@@ -200,19 +200,19 @@ require('lazy').setup({
      },
    },
  
@@ -35,7 +35,7 @@ index 6c6ae02..233e6b1 100644
  
    {
      -- Set lualine as statusline
-@@ -271,7 +271,7 @@ require('lazy').setup({
+@@ -282,7 +282,7 @@ require('lazy').setup({
    --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
    --
    --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
@@ -44,7 +44,7 @@ index 6c6ae02..233e6b1 100644
  }, {})
  
  -- [[ Setting options ]]
-@@ -281,11 +281,12 @@ require('lazy').setup({
+@@ -292,11 +292,12 @@ require('lazy').setup({
  -- Set highlight on search
  vim.o.hlsearch = false
  
@@ -60,7 +60,7 @@ index 6c6ae02..233e6b1 100644
  
  -- Sync clipboard between OS and Neovim.
  --  Remove this option if you want your OS clipboard to remain independent.
-@@ -315,6 +316,14 @@ vim.o.completeopt = 'menuone,noselect'
+@@ -326,6 +327,14 @@ vim.o.completeopt = 'menuone,noselect'
  -- NOTE: You should make sure your terminal supports this
  vim.o.termguicolors = true
  
@@ -75,7 +75,7 @@ index 6c6ae02..233e6b1 100644
  -- [[ Basic Keymaps ]]
  
  -- Keymaps for better default experience
-@@ -428,8 +437,31 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc =
+@@ -439,8 +448,31 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc =
  vim.defer_fn(function()
    require('nvim-treesitter.configs').setup {
      -- Add languages to be installed here that you want installed for treesitter
@@ -109,7 +109,7 @@ index 6c6ae02..233e6b1 100644
      -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
      auto_install = false,
      -- Install languages synchronously (only applied to `ensure_installed`)
-@@ -573,13 +605,16 @@ require('mason-lspconfig').setup()
+@@ -586,13 +618,18 @@ require('mason-lspconfig').setup()
  --  If you want to override the default filetypes that your language server will attach to you can
  --  define the property 'filetypes' to the map in question.
  local servers = {
@@ -129,20 +129,24 @@ index 6c6ae02..233e6b1 100644
 +    }
 +  },
 +  gopls = {},
++  helm_ls = {},
 +  html = { filetypes = { 'html', 'twig', 'hbs'} },
++  htmx = {},
    lua_ls = {
      Lua = {
        workspace = { checkThirdParty = false },
-@@ -588,6 +623,8 @@ local servers = {
+@@ -601,6 +638,10 @@ local servers = {
        -- diagnostics = { disable = { 'missing-fields' } },
      },
    },
 +  pyright = {},
++  templ = {},
++  terraformls = {},
 +  tsserver = {},
  }
  
  -- Setup neovim lua configuration
-@@ -606,12 +643,23 @@ mason_lspconfig.setup {
+@@ -619,12 +660,25 @@ mason_lspconfig.setup {
  
  mason_lspconfig.setup_handlers {
    function(server_name)
@@ -155,12 +159,14 @@ index 6c6ae02..233e6b1 100644
      }
 +    if server_name == 'elixirls' then
 +      local version = vim.fn.system('mise current elixir') or ''
-+      local match_version_111 = string.match(version, '^1.11')
-+      local match_version_112 = string.match(version, '^1.12')
-+      if  match_version_111 ~= nil then
-+        opts = vim.tbl_extend('keep', opts, { cmd = { vim.fn.expand('$LOCAL_SRC_HOME') .. '/elixir-ls/release/v0.12.0/language_server.sh' } })
-+      elseif match_version_112 ~= nil then
-+        opts = vim.tbl_extend('keep', opts, { cmd = { vim.fn.expand('$LOCAL_SRC_HOME') .. '/elixir-ls/release/v0.14.6/language_server.sh' } })
++      local elixir_servers = {
++        { version = '^1.11', path = '/elixir-ls/release/v0.12.0/language_server.sh' },
++        { version = '^1.12', path = '/elixir-ls/release/v0.14.6/language_server.sh' },
++      }
++      for _, server in ipairs(elixir_servers) do
++        if string.match(version, server.version) == nil then goto continue end
++        opts = vim.tbl_extend('keep', opts, { cmd = { vim.fn.expand('$LOCAL_SRC_HOME') .. server.path } })
++        ::continue::
 +      end
 +    end
 +    require('lspconfig')[server_name].setup(opts)

@@ -14,7 +14,7 @@ patch_init_lua: ## create a patch file with the changes made in kickstart's init
 
 .PHONY: patch_init_lua_dry_run
 patch_init_lua_dry_run: ## show the changes made in kickstart's init.lua file
-	@cd $(neovim_config_dir) && git --patch init.lua
+	@cd $(neovim_config_dir) && git diff --patch init.lua
 
 .PHONY: help
 help: ## show help message
