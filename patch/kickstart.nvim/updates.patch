@@ -1,175 +1,165 @@
 diff --git a/init.lua b/init.lua
-index fd4567d..236fb97 100644
+index 013fcc2..ca98546 100644
 --- a/init.lua
 +++ b/init.lua
-@@ -200,19 +200,19 @@ require('lazy').setup({
-     },
-   },
+@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
+ vim.g.maplocalleader = ' '
  
--  {
--    -- Theme inspired by Atom
--    'navarasu/onedark.nvim',
--    priority = 1000,
--    lazy = false,
--    config = function()
--      require('onedark').setup {
--        -- Set a style preset. 'dark' is default.
--        style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
--      }
--      require('onedark').load()
--    end,
--  },
-+  -- {
-+  --   -- Theme inspired by Atom
-+  --   'navarasu/onedark.nvim',
-+  --   priority = 1000,
-+  --   lazy = false,
-+  --   config = function()
-+  --     require('onedark').setup {
-+  --       -- Set a style preset. 'dark' is default.
-+  --       style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
-+  --     }
-+  --     require('onedark').load()
-+  --   end,
-+  -- },
- 
-   {
-     -- Set lualine as statusline
-@@ -282,7 +282,7 @@ require('lazy').setup({
-   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-   --
-   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
--  -- { import = 'custom.plugins' },
-+  { import = 'custom.plugins' },
- }, {})
+ -- Set to true if you have a Nerd Font installed
+-vim.g.have_nerd_font = false
++vim.g.have_nerd_font = true
  
  -- [[ Setting options ]]
-@@ -292,11 +292,12 @@ require('lazy').setup({
- -- Set highlight on search
- vim.o.hlsearch = false
+ -- See `:help vim.opt`
+@@ -102,10 +102,10 @@ vim.g.have_nerd_font = false
+ vim.opt.number = true
+ -- You can also add relative line numbers, to help with jumping.
+ --  Experiment for yourself to see if you like it!
+--- vim.opt.relativenumber = true
++vim.opt.relativenumber = true
  
---- Make line numbers default
-+-- Make relative line numbers default
- vim.wo.number = true
-+vim.wo.relativenumber = true
- 
---- Enable mouse mode
--vim.o.mouse = 'a'
+--- Enable mouse mode, can be useful for resizing splits for example!
+-vim.opt.mouse = 'a'
 +-- Disable mouse mode
-+vim.o.mouse = ''
++vim.opt.mouse = ''
  
- -- Sync clipboard between OS and Neovim.
- --  Remove this option if you want your OS clipboard to remain independent.
-@@ -326,6 +327,14 @@ vim.o.completeopt = 'menuone,noselect'
- -- NOTE: You should make sure your terminal supports this
- vim.o.termguicolors = true
+ -- Don't show the mode, since it's already in the status line
+ vim.opt.showmode = false
+@@ -154,6 +154,14 @@ vim.opt.cursorline = true
+ -- Minimal number of screen lines to keep above and below the cursor.
+ vim.opt.scrolloff = 10
  
 +-- Set foldmethod
 +-- See `:help foldmethod`
-+vim.o.foldcolumn = '1'
-+vim.o.foldlevel = 99
-+vim.o.foldlevelstart = 99
-+vim.o.foldenable = true
-+vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
++vim.opt.foldcolumn = '1'
++vim.opt.foldlevel = 99
++vim.opt.foldlevelstart = 99
++vim.opt.foldenable = true
++vim.opt.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 +
  -- [[ Basic Keymaps ]]
+ --  See `:help vim.keymap.set()`
  
- -- Keymaps for better default experience
-@@ -439,8 +448,31 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc =
- vim.defer_fn(function()
-   require('nvim-treesitter.configs').setup {
-     -- Add languages to be installed here that you want installed for treesitter
--    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
--
-+    ensure_installed = {
-+      'css',
-+      'dockerfile',
-+      'eex',
-+      'elixir',
-+      'erlang',
-+      'gitcommit',
-+      'go',
-+      'heex',
-+      'html',
-+      'http',
-+      'javascript',
-+      'json',
-+      'lua',
-+      'markdown',
-+      'markdown_inline',
-+      'python',
-+      'sql',
-+      'toml',
-+      'tsx',
-+      'typescript',
-+      'vim',
-+      'vimdoc',
-+      'yaml'
-+    },
-     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-     auto_install = false,
-     -- Install languages synchronously (only applied to `ensure_installed`)
-@@ -586,13 +618,18 @@ require('mason-lspconfig').setup()
- --  If you want to override the default filetypes that your language server will attach to you can
- --  define the property 'filetypes' to the map in question.
- local servers = {
--  -- clangd = {},
--  -- gopls = {},
--  -- pyright = {},
--  -- rust_analyzer = {},
--  -- tsserver = {},
--  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
--
-+  elixirls = {
-+    elixirLS = {
-+      dialyzerEnabled = true,
-+      dialyzerFormat = "dialyxir_long",
-+      fetchDeps = false,
-+      mixEnv = "test"
-+    }
-+  },
-+  gopls = {},
-+  helm_ls = {},
-+  html = { filetypes = { 'html', 'twig', 'hbs'} },
-+  htmx = {},
-   lua_ls = {
-     Lua = {
-       workspace = { checkThirdParty = false },
-@@ -601,6 +638,10 @@ local servers = {
-       -- diagnostics = { disable = { 'missing-fields' } },
-     },
-   },
-+  pyright = {},
-+  templ = {},
-+  terraformls = {},
-+  tsserver = {},
- }
+@@ -283,6 +291,7 @@ require('lazy').setup({
+       require('which-key').register {
+         ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
+         ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
++        ['<leader>h'] = { name = 'Git [h]unk', _ = 'which_key_ignore' },
+         ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
+         ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
+         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+@@ -551,6 +560,18 @@ require('lazy').setup({
+         -- tsserver = {},
+         --
  
- -- Setup neovim lua configuration
-@@ -619,12 +660,25 @@ mason_lspconfig.setup {
++        elixirls = {
++          elixirLS = {
++            dialyzerEnabled = true,
++            dialyzerFormat = 'dialyxir_long',
++            fetchDeps = false,
++            mixEnv = 'test',
++          },
++        },
++        gopls = {},
++        helm_ls = {},
++        html = { filetypes = { 'html', 'twig', 'hbs' } },
++        htmx = {},
+         lua_ls = {
+           -- cmd = {...},
+           -- filetypes = { ...},
+@@ -565,6 +586,10 @@ require('lazy').setup({
+             },
+           },
+         },
++        pyright = {},
++        templ = {},
++        terraformls = {},
++        tsserver = {},
+       }
  
- mason_lspconfig.setup_handlers {
-   function(server_name)
--    require('lspconfig')[server_name].setup {
-+    local opts = {
-       capabilities = capabilities,
-       on_attach = on_attach,
-       settings = servers[server_name],
-       filetypes = (servers[server_name] or {}).filetypes,
-     }
-+    if server_name == 'elixirls' then
-+      local version = vim.fn.system('mise current elixir') or ''
-+      local elixir_servers = {
-+        { version = '^1.11', path = '/elixir-ls/release/v0.12.0/language_server.sh' },
-+        { version = '^1.12', path = '/elixir-ls/release/v0.14.6/language_server.sh' },
-+      }
-+      for _, server in ipairs(elixir_servers) do
-+        if string.match(version, server.version) == nil then goto continue end
-+        opts = vim.tbl_extend('keep', opts, { cmd = { vim.fn.expand('$LOCAL_SRC_HOME') .. server.path } })
-+        ::continue::
-+      end
-+    end
-+    require('lspconfig')[server_name].setup(opts)
-   end,
- }
+       -- Ensure the servers and tools above are installed
+@@ -591,6 +616,33 @@ require('lazy').setup({
+             -- by the server configuration above. Useful when disabling
+             -- certain features of an LSP (for example, turning off formatting for tsserver)
+             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
++            -- overwrite elixirls for older versions of elixir
++            --   * elixir 1.11 use version 0.12.0
++            --   * elixir 1.12 use verions 0.14.6
++            if server_name == 'elixirls' then
++              local version = vim.fn.system('mise current elixir') or ''
++              local elixir_servers = {
++                { version = '^1.11', path = '/elixir-ls/release/v0.12.0/language_server.sh' },
++                { version = '^1.12', path = '/elixir-ls/release/v0.14.6/language_server.sh' },
++              }
++              for _, ex_server in ipairs(elixir_servers) do
++                if string.match(version, ex_server.version) == nil then goto continue end
++                server = vim.tbl_extend('keep', server, { cmd = { vim.fn.expand('$LOCAL_SRC_HOME') .. ex_server.path } })
++                ::continue::
++              end
++            elseif server_name == 'pyright' then
++              local python_paths = {
++                { name = 'poetry', cmd = { 'poetry', 'env', 'info', '--executable' }},
++                { name = 'system', cmd = { 'which', 'python' }},
++              }
++              for _, py_server in ipairs(python_paths) do
++                local cmd = vim.system(py_server.cmd, { text = true }):wait()
++                if (cmd.code > 0) then goto continue end
++                local python_path = string.gsub(cmd.stdout, '\n', '')
++                server = vim.tbl_extend('keep', server, { settings = { python = { pythonPath = python_path } } })
++                ::continue::
++              end
++            end
+             require('lspconfig')[server_name].setup(server)
+           end,
+         },
+@@ -791,7 +843,31 @@ require('lazy').setup({
+     'nvim-treesitter/nvim-treesitter',
+     build = ':TSUpdate',
+     opts = {
+-      ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc' },
++      ensure_installed = {
++        'css',
++        'dockerfile',
++        'eex',
++        'elixir',
++        'erlang',
++        'gitcommit',
++        'go',
++        'heex',
++        'html',
++        'http',
++        'javascript',
++        'json',
++        'lua',
++        'markdown',
++        'markdown_inline',
++        'python',
++        'sql',
++        'toml',
++        'tsx',
++        'typescript',
++        'vim',
++        'vimdoc',
++        'yaml',
++      },
+       -- Autoinstall languages that are not installed
+       auto_install = true,
+       highlight = {
+@@ -828,7 +904,7 @@ require('lazy').setup({
+   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
+   --
+   -- require 'kickstart.plugins.debug',
+-  -- require 'kickstart.plugins.indent_line',
++  require 'kickstart.plugins.indent_line',
+   -- require 'kickstart.plugins.lint',
  
+   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
+@@ -836,7 +912,7 @@ require('lazy').setup({
+   --
+   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
+   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
+-  -- { import = 'custom.plugins' },
++  { import = 'custom.plugins' },
+ }, {
+   ui = {
+     -- If you are using a Nerd Font: set icons to an empty table which will use the

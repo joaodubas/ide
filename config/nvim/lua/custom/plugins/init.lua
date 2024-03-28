@@ -4,50 +4,123 @@
 -- See the kickstart.nvim README for more information
 return {
   {
-    'mgoral/vim-bw',
-    url = 'https://git.goral.net.pl/mgoral/vim-bw.git',
-    priority = 1000,
-    config = function ()
-      vim.cmd.colorscheme 'bw-onedark'
-    end
+    'lewis6991/gitsigns.nvim',
+    opts = {
+      on_attach = function(bufnr)
+        local gs = package.loaded.gitsigns
+
+        local function map(mode, l, r, opts)
+          opts = opts or {}
+          opts.buffer = bufnr
+          vim.keymap.set(mode, l, r, opts)
+        end
+
+        -- Navigation
+        map({ 'n', 'v' }, ']c', function()
+          if vim.wo.diff then
+            return ']c'
+          end
+          vim.schedule(function()
+            gs.next_hunk()
+          end)
+          return '<Ignore>'
+        end, { expr = true, desc = 'Jump to next hunk' })
+
+        map({ 'n', 'v' }, '[c', function()
+          if vim.wo.diff then
+            return '[c'
+          end
+          vim.schedule(function()
+            gs.prev_hunk()
+          end)
+          return '<Ignore>'
+        end, { expr = true, desc = 'Jump to previous hunk' })
+
+        -- Actions
+        -- visual mode
+        map('v', '<leader>hs', function()
+          gs.stage_hunk { vim.fn.line '.', vim.fn.line 'v' }
+        end, { desc = 'stage git hunk' })
+        map('v', '<leader>hr', function()
+          gs.reset_hunk { vim.fn.line '.', vim.fn.line 'v' }
+        end, { desc = 'reset git hunk' })
+        -- normal mode
+        map('n', '<leader>hs', gs.stage_hunk, { desc = 'git stage hunk' })
+        map('n', '<leader>hr', gs.reset_hunk, { desc = 'git reset hunk' })
+        map('n', '<leader>hS', gs.stage_buffer, { desc = 'git Stage buffer' })
+        map('n', '<leader>hu', gs.undo_stage_hunk, { desc = 'undo stage hunk' })
+        map('n', '<leader>hR', gs.reset_buffer, { desc = 'git Reset buffer' })
+        map('n', '<leader>hp', gs.preview_hunk, { desc = 'preview git hunk' })
+        map('n', '<leader>hb', function()
+          gs.blame_line { full = false }
+        end, { desc = 'git blame line' })
+        map('n', '<leader>hd', gs.diffthis, { desc = 'git diff against index' })
+        map('n', '<leader>hD', function()
+          gs.diffthis '~'
+        end, { desc = 'git diff against last commit' })
+
+        -- Toggles
+        map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = 'toggle git blame line' })
+        map('n', '<leader>td', gs.toggle_deleted, { desc = 'toggle git show deleted' })
+
+        -- Text object
+        map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'select git hunk' })
+      end,
+    },
   },
   {
     'joaodubas/gitlinker.nvim',
-    config = function ()
-      local actions = require('gitlinker.actions')
-      local hosts = require('gitlinker.hosts')
-      require('gitlinker').setup({
+    config = function()
+      local actions = require 'gitlinker.actions'
+      local hosts = require 'gitlinker.hosts'
+      require('gitlinker').setup {
         opts = {
-          remote = "origin",
+          remote = 'origin',
           add_current_line_on_normal_mode = true,
           action_callback = actions.copy_to_clipboard,
           print_url = true,
         },
         callbacks = {
-          ["github.com"] = hosts.get_github_type_url,
-          ["bitbucket.org"] = hosts.get_bitbucket_type_url,
-          ["gitea.dubas.dev"] = hosts.get_gitea_type_url,
+          ['github.com'] = hosts.get_github_type_url,
+          ['bitbucket.org'] = hosts.get_bitbucket_type_url,
+          ['gitea.dubas.dev'] = hosts.get_gitea_type_url,
         },
-        mappings = "<leader>gy"
-      })
-    end
+        mappings = '<leader>gy',
+      }
+    end,
+  },
+  {
+    'NeogitOrg/neogit',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'sindrets/diffview.nvim',
+      'nvim-telescope/telescope.nvim',
+    },
+    opts = {
+      git_services = {
+        ['gitea.dubas.dev'] = 'https://gitea.dubas.dev/${owner}/${repository}/compare/${branch_name}',
+      },
+    },
+    keys = {
+      { '<leader>gs', '<cmd>Neogit<cr>', desc = 'Git status' },
+    },
   },
   'nvim-treesitter/nvim-treesitter-context',
   {
     'kevinhwang91/nvim-ufo',
     dependencies = { 'kevinhwang91/promise-async' },
     event = 'BufRead',
-    keys = function ()
-      local ufo = require('ufo')
+    keys = function()
+      local ufo = require 'ufo'
       return {
-        { 'zR', ufo.openAllFolds, { desc = "Open all folds" } },
-        { 'zM', ufo.closeAllFolds, { desc = "Close all folds" } },
-        { 'zr', ufo.openFoldsExceptKinds, { desc = "Open fold" } },
-        { 'zm', ufo.closeFoldsWith, { desc = "Close fold" } },
+        { 'zR', ufo.openAllFolds, { desc = 'Open all folds' } },
+        { 'zM', ufo.closeAllFolds, { desc = 'Close all folds' } },
+        { 'zr', ufo.openFoldsExceptKinds, { desc = 'Open fold' } },
+        { 'zm', ufo.closeFoldsWith, { desc = 'Close fold' } },
       }
     end,
-    opts = function ()
-      local handler = function (virtText, lnum, endLnum, width, truncate)
+    opts = function()
+      local handler = function(virtText, lnum, endLnum, width, truncate)
         local newVirtText = {}
         local suffix = (' 󰁂 %d '):format(endLnum - lnum)
         local sufWidth = vim.fn.strdisplaywidth(suffix)
@@ -61,11 +134,11 @@ return {
           else
             chunkText = truncate(chunkText, targetWidth - curWidth)
             local hlGroup = chunk[2]
-            table.insert(newVirtText, {chunkText, hlGroup})
+            table.insert(newVirtText, { chunkText, hlGroup })
             chunkWidth = vim.fn.strdisplaywidth(chunkText)
             -- str width returned from truncate() may less than 2nd argument, need padding
             if curWidth + chunkWidth < targetWidth then
-                suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
+              suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
             end
             break
           end
@@ -77,64 +150,88 @@ return {
 
       return {
         fold_virt_text_handler = handler,
-        provider_selector = function (_, _, _)
+        provider_selector = function(_, _, _)
           return { 'treesitter', 'indent' }
-        end
+        end,
       }
     end,
   },
   {
     'stevearc/oil.nvim',
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
     keys = {
-      { '-', '<cmd>Oil<cr>', desc = "Open parent directory" },
+      { '-', '<cmd>Oil<cr>', desc = 'Open parent directory' },
     },
     opts = {},
   },
   {
+    'vhyrro/luarocks.nvim',
+    priority = 1000,
+    config = true,
+  },
+  {
     'rest-nvim/rest.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim' },
+    dependencies = { 'luarocks.nvim' },
     ft = {
       'http',
-      'rest'
+      'rest',
     },
-    opts = {
-      result_split_horizontal = false,
-      result_split_in_place = false,
-      skip_ssl_verification = false,
-      encode_url = true,
-      highlight = {
-        enabled = true,
-        timeout = 15
-      },
-      result = {
-        show_url = true,
-        show_curl_command = true,
-        show_http_info = true,
-        show_headers = true,
-        formatters = {
-          json = 'jq',
-          html = false
-        },
-        jump_to_request = true,
+    config = function()
+      require('rest-nvim').setup {
+        client = 'curl',
+        custom_dynamic_variables = {},
+        encode_url = true,
         env_file = '.env',
-        custom_dynamic_variables = { },
-        yank_dry_run = true
+        skip_ssl_verification = false,
+        highlight = {
+          enable = true,
+          timeout = 15,
+        },
+        result = {
+          behavior = {
+            decode_url = true,
+            formatters = {
+              json = 'jq',
+              html = false,
+            },
+            show_info = {
+              curl_command = true,
+              headers = true,
+              http_info = true,
+              url = true,
+            },
+            statistics = {
+              enable = true,
+              stats = {
+                { 'total_time', title = 'Time taken:' },
+                { 'size_download_t', title = 'Download size:' },
+              },
+            },
+          },
+          split = {
+            horizontal = false,
+            in_place = false,
+          },
+        },
       }
-    },
-    keys = function ()
+    end,
+    keys = function()
       local status_ok, which_key = pcall(require, 'which-key')
       if status_ok then
-        which_key.register({
-          ['<leader>t'] = { name = 'Res[t]', _ = 'which_key_ignore' }
-        })
+        which_key.register {
+          ['<leader>t'] = { name = 'Res[t]', _ = 'which_key_ignore' },
+        }
       end
       return {
-        { '<leader>tr', '<Plug>RestNvim', desc = 'Run the request under cursor' },
-        { '<leader>tp', '<Plug>RestNvimPreview', desc = 'Preview the curl command for the request under cursor' },
-        { '<leader>tl', '<Plug>RestNvimLast', desc = 'Re-run the last request' }
+        { '<leader>tr', '<cmd>Rest run<cr>', desc = 'Run the request under cursor' },
+        {
+          '<leader>tp',
+          '<Plug>RestNvimPreview',
+          desc = 'Preview the curl command for the request under cursor',
+        },
+        { '<leader>tl', '<cmd>Rest run last<cr>', desc = 'Re-run the last request' },
       }
-    end
+    end,
   },
   {
     'akinsho/toggleterm.nvim',
@@ -142,22 +239,22 @@ return {
       size = vim.o.lines * 0.75,
       open_mapping = [[<c-\>]],
       hide_numbers = true,
-      shade_filetypes = { },
+      shade_filetypes = {},
       shade_terminals = true,
       shading_factor = 2,
       direction = 'horizontal',
       shell = vim.o.shell,
     },
-    keys = function ()
+    keys = function()
       local status_ok, which_key = pcall(require, 'which-key')
       if status_ok then
-        which_key.register({
-          ['<leader>m'] = { name = 'Toggle ter[m]inal', _ = 'which_key_ignore' }
-        })
+        which_key.register {
+          ['<leader>m'] = { name = 'Toggle ter[m]inal', _ = 'which_key_ignore' },
+        }
       end
       vim.api.nvim_create_autocmd('TermOpen', {
         group = vim.api.nvim_create_augroup('kickstart-custom-term-open-mapping', { clear = true }),
-        callback = function (args)
+        callback = function(args)
           local bufnr = args.buf
           local opts = { buffer = bufnr }
           vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], opts)
@@ -167,13 +264,28 @@ return {
           vim.keymap.set('t', '<C-k>', [[<cmd>wincmd k<cr>]], opts)
           vim.keymap.set('t', '<C-l>', [[<cmd>wincmd l<cr>]], opts)
           vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]], opts)
-        end
+        end,
       })
       return {
-        { '<leader>mh', '<cmd>ToggleTerm direction=horizontal size=' .. tostring(vim.o.lines * 0.75) .. '<cr>', desc = 'Open ter[m]inal [h]orizontally', noremap = true },
-        { '<leader>mv', '<cmd>ToggleTerm direction=vertical size=' .. tostring(vim.o.columns * 0.5) .. '<cr>', desc = 'Open ter[m]inal [v]ertically', noremap = true },
-        { '<leader>mc', '<cmd>ToggleTermSendCurrentLine<cr>', desc = 'Send [c]urrent line under the cursor', noremap = true }
+        {
+          '<leader>mh',
+          '<cmd>ToggleTerm direction=horizontal size=' .. tostring(vim.o.lines * 0.75) .. '<cr>',
+          desc = 'Open ter[m]inal [h]orizontally',
+          noremap = true,
+        },
+        {
+          '<leader>mv',
+          '<cmd>ToggleTerm direction=vertical size=' .. tostring(vim.o.columns * 0.5) .. '<cr>',
+          desc = 'Open ter[m]inal [v]ertically',
+          noremap = true,
+        },
+        {
+          '<leader>mc',
+          '<cmd>ToggleTermSendCurrentLine<cr>',
+          desc = 'Send [c]urrent line under the cursor',
+          noremap = true,
+        },
       }
-    end
+    end,
   },
 }

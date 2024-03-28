@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:23.10
 
 # system deps
 ARG USER_UID=1000
@@ -39,7 +39,7 @@ RUN apt-get update \
     libncurses-dev \
     libncurses5-dev \
     libncursesw5-dev \
-    libodbc1 \
+    libodbc2 \
     libpcre2-dev \
     libreadline-dev \
     libsctp-dev \
@@ -47,8 +47,7 @@ RUN apt-get update \
     libsqlite3-dev \
     libssl-dev \
     libtool \
-    libwxgtk3.0-gtk3-0v5 \
-    libwxgtk3.0-gtk3-dev \
+    libwxgtk3.2-dev \
     libxslt-dev \
     libyaml-dev \
     llvm \
@@ -74,6 +73,12 @@ RUN apt-get update \
     zlib1g-dev \
   && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8 \
+  && echo 'remove existing ubuntu user' \
+  && groupdel --force ubuntu \
+  && userdel --force ubuntu \
+  && echo 'update gid from systemd-journal group' \
+  && groupmod -g 994 systemd-journal \
+  && chgrp --recursive systemd-journal /var/log/journal \
   && echo 'setup unprivileged user' \
   && groupadd --gid ${WHEEL_GID} wheel \
   && groupadd --gid ${DOCKER_GID} docker \
@@ -94,7 +99,10 @@ ENV DO_VERSION 24.0.7
 ENV DO_URL https://download.docker.com/linux/static/stable/x86_64/docker-${DO_VERSION}.tgz
 ENV DC_VERSION v2.23.3
 ENV DC_URL https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-linux-x86_64
+ENV BX_VERSION v0.13.1
+ENV BX_URL https://github.com/docker/buildx/releases/download/${BX_VERSION}/buildx-${BX_VERSION}.linux-amd64
 RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes \
+  && curl -sS https://setup.atuin.sh | bash \
   && mkdir /tmp/download \
   && curl -L ${DO_URL} | tar -zx -C /tmp/download \
   && chgrp --recursive docker /tmp/download \
@@ -103,6 +111,8 @@ RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes \
   && mkdir -p /usr/local/lib/docker/cli-plugins \
   && curl -L ${DC_URL} -o /usr/local/lib/docker/cli-plugins/docker-compose \
   && chmod 750 /usr/local/lib/docker/cli-plugins/docker-compose \
+  && curl -L ${BX_URL} -o /usr/local/lib/docker/cli-plugins/docker-buildx \
+  && chmod 750 /usr/local/lib/docker/cli-plugins/docker-buildx \
   && chgrp --recursive docker /usr/local/lib/docker
 
 USER coder
@@ -148,9 +158,10 @@ RUN fish -c true \
   && echo 'starship init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo '{$LOCAL_BIN_HOME}/mise activate fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'zoxide init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'atuin init fish | source' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'alias cat="bat"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo 'alias l="eza --time-style long-iso --color=auto -F"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo 'alias ll="l -Fahl"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias l="eza --time-style=long-iso --color=auto --classify=always"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias ll="l -ahl"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'alias la="l -a"' >> ${XDG_CONFIG_HOME}/fish/config.fish
 
 # git configuration
@@ -158,7 +169,7 @@ COPY ./patch/kickstart.nvim/updates.patch /tmp
 COPY ./config/nvim/lua/custom/plugins/init.lua /tmp
 RUN git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME}"/nvim \
   && cd ${XDG_CONFIG_HOME}/nvim \
-  && git reset --hard 7af594fd319fbae6b2aaa06337f3df8acbbb7f18 \
+  && git reset --hard 773e482d4b40cec4095e4b60fbd753cb69b3f51b \
   && git apply /tmp/updates.patch \
   && cp /tmp/init.lua ${XDG_CONFIG_HOME}/nvim/lua/custom/plugins \
   && nvim --headless "+Lazy! sync" +qa
@@ -174,6 +185,8 @@ RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
     fzf \
     helm \
     k3d \
+    k3sup \
+    k9s \
     kubectl \
     kubie \
     lefthook \
@@ -192,7 +205,14 @@ ARG GIT_USER_EMAIL
 ARG GIT_USER_NAME
 RUN git config --global user.email "${GIT_USER_EMAIL}" \
   && git config --global user.name "${GIT_USER_NAME}" \
-  && git config --global core.editor nvim
+  && git config --global core.editor nvim \
+  && git config --global diff.tool nvimdiff \
+  && git config --global difftool.nvimdiff.layout "LOCAL,REMOTE" \
+  && git config --global merge.tool nvimdiff \
+  && git config --global mergetool.nvimdiff.layout "LOCAL,BASE,REMOTE / MERGED" \
+  && git config --global includeIf."hasconfig:remote.*.url:gitea:*/**".path ${XDG_CONFIG_HOME}/git/personal_gitea \
+  && git config --global includeIf."hasconfig:remote.*.url:github:joaodubas/**".path ${XDG_CONFIG_HOME}/git/personal_github \
+  && git config --global includeIf."gitdir:/opt/work/".path ${XDG_CONFIG_HOME}/git/work
 
 COPY ./scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 COPY ./scripts/elixir-ls-setup.sh /usr/local/bin/elixir-ls-setup
