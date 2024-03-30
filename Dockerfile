@@ -19,6 +19,7 @@ RUN apt-get update \
     curl \
     doas \
     fish \
+    fop \
     g++ \
     gcc \
     gfortran \
@@ -34,6 +35,8 @@ RUN apt-get update \
     libc6-dev \
     libcurl3-dev \
     libffi-dev \
+    libgl1-mesa-dev \
+    libglu1-mesa-dev \
     liblzma-dev \
     liblzma5 \
     libncurses-dev \
@@ -41,20 +44,26 @@ RUN apt-get update \
     libncursesw5-dev \
     libodbc2 \
     libpcre2-dev \
+    libpng-dev \
     libreadline-dev \
     libsctp-dev \
     libsctp1 \
     libsqlite3-dev \
+    libssh-dev \
     libssl-dev \
     libtool \
+    libwxgtk-webview3.2-dev \
     libwxgtk3.2-dev \
+    libxml2-utils \
     libxslt-dev \
     libyaml-dev \
     llvm \
     locales \
+    m4 \
     make \
     neovim \
     net-tools \
+    openjdk-17-jdk \
     openssh-client \
     openssl \
     parallel \
@@ -69,6 +78,7 @@ RUN apt-get update \
     uuid-dev \
     wget \
     xorg-dev \
+    xsltproc \
     xz-utils \
     zlib1g-dev \
   && rm -rf /var/lib/apt/lists/* \
