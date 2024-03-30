@@ -1,4 +1,4 @@
-FROM ubuntu:23.10
+FROM ubuntu:mantic-20240216
 
 # system deps
 ARG USER_UID=1000
