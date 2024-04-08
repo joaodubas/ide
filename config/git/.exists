@@ -1,0 +1,9 @@
+[commit]
+	gpgsign = true
+[gpg]
+	format = ssh
+[user]
+	email = {{email}}
+	name = {{name}}
+	signingKey = {{path-to-pub-ssh-key}}
+

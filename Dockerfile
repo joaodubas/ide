@@ -1,10 +1,18 @@
 FROM ubuntu:mantic-20240216
 
-# system deps
+# user setup
 ARG USER_UID=1000
 ARG USER_GID=1000
 ARG DOCKER_GID=999
 ARG WHEEL_GID=980
+RUN echo 'remove existing ubuntu user' \
+  && groupdel --force ubuntu \
+  && userdel --force ubuntu \
+  && echo 'setup extra groups' \
+  && groupadd --gid ${WHEEL_GID} wheel \
+  && groupadd --gid ${DOCKER_GID} docker
+
+# system deps
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
   && apt-get install -y software-properties-common \
@@ -83,15 +91,7 @@ RUN apt-get update \
     zlib1g-dev \
   && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8 \
-  && echo 'remove existing ubuntu user' \
-  && groupdel --force ubuntu \
-  && userdel --force ubuntu \
-  && echo 'update gid from systemd-journal group' \
-  && groupmod -g 994 systemd-journal \
-  && chgrp --recursive systemd-journal /var/log/journal \
   && echo 'setup unprivileged user' \
-  && groupadd --gid ${WHEEL_GID} wheel \
-  && groupadd --gid ${DOCKER_GID} docker \
   && groupadd --gid ${USER_GID} coder \
   && useradd \
     --uid ${USER_UID} \
@@ -215,6 +215,7 @@ ARG GIT_USER_EMAIL
 ARG GIT_USER_NAME
 RUN git config --global user.email "${GIT_USER_EMAIL}" \
   && git config --global user.name "${GIT_USER_NAME}" \
+  && git config --global gpg.ssh.allowedSignersFile "${XDG_CONFIG_HOME}/git/allowed_signers" \
   && git config --global core.editor nvim \
   && git config --global diff.tool nvimdiff \
   && git config --global difftool.nvimdiff.layout "LOCAL,REMOTE" \
