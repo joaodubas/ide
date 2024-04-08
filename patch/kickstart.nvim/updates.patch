@@ -1,5 +1,5 @@
 diff --git a/init.lua b/init.lua
-index db55a9e..1a11f8a 100644
+index 496f45b..c667dc3 100644
 --- a/init.lua
 +++ b/init.lua
 @@ -91,7 +91,7 @@ vim.g.mapleader = ' '
@@ -111,7 +111,7 @@ index db55a9e..1a11f8a 100644
              require('lspconfig')[server_name].setup(server)
            end,
          },
-@@ -791,7 +843,34 @@ require('lazy').setup({
+@@ -802,7 +854,37 @@ require('lazy').setup({
      'nvim-treesitter/nvim-treesitter',
      build = ':TSUpdate',
      opts = {
@@ -131,12 +131,15 @@ index db55a9e..1a11f8a 100644
 +        'http',
 +        'javascript',
 +        'json',
++        'jsonc',
 +        'lua',
 +        'luadoc',
 +        'markdown',
 +        'markdown_inline',
 +        'python',
 +        'sql',
++        'templ',
++        'terraform',
 +        'toml',
 +        'tsx',
 +        'typescript',
@@ -147,7 +150,7 @@ index db55a9e..1a11f8a 100644
        -- Autoinstall languages that are not installed
        auto_install = true,
        highlight = {
-@@ -828,7 +907,7 @@ require('lazy').setup({
+@@ -839,7 +921,7 @@ require('lazy').setup({
    --  Uncomment any of the lines below to enable them (you will need to restart nvim).
    --
    -- require 'kickstart.plugins.debug',
@@ -156,7 +159,7 @@ index db55a9e..1a11f8a 100644
    -- require 'kickstart.plugins.lint',
  
    -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-@@ -836,7 +915,7 @@ require('lazy').setup({
+@@ -847,7 +929,7 @@ require('lazy').setup({
    --
    --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
    --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
