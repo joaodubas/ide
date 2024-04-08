@@ -188,6 +188,7 @@ RUN git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME}
 RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
     awscli \
     bat \
+    bitwarden \
     dagger \
     elixir \
     erlang \
@@ -202,6 +203,7 @@ RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
     lefthook \
     poetry \
     ripgrep \
+    rust \
     starship \
     terraform \
     tilt \
