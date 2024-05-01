@@ -1,4 +1,4 @@
-FROM ubuntu:mantic-20240416
+FROM ubuntu:24.04
 
 # user setup
 ARG USER_UID=1000
