@@ -207,6 +207,7 @@ RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
     ripgrep \
     rust \
     starship \
+    task \
     terraform \
     tilt \
     tmux \
