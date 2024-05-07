@@ -159,6 +159,7 @@ RUN mkdir -p ${HOME}/.local/src \
 RUN git clone https://github.com/elixir-lsp/elixir-ls.git ${LOCAL_SRC_HOME}/elixir-ls
 
 # command line utilities
+ENV MISE_ENV_FILE .env
 RUN curl https://mise.jdx.dev/install.sh | sh \
   && curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash \
   && git clone https://github.com/tmux-plugins/tpm.git ${XDG_CONFIG_HOME}/tmux/plugins/tpm
@@ -198,6 +199,7 @@ RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
     k3d \
     k3sup \
     k9s \
+    kind \
     kubectl \
     kubie \
     lefthook \
