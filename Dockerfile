@@ -190,6 +190,7 @@ RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
     awscli \
     bat \
     bitwarden \
+    circleci-cli \
     dagger \
     elixir \
     erlang \

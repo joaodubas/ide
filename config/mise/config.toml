@@ -2,6 +2,7 @@
 awscli = "2.15.30"
 bat = "0.24.0"
 bitwarden = "2024.2.1"
+circleci-cli = "0.1.30549"
 dagger = "0.10.2"
 elixir = "1.16.2-otp-26"
 erlang = "26.2.3"
