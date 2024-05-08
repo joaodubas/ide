@@ -1,3 +1,6 @@
+# sample git conditional configuration
+
+```
 [commit]
 	gpgsign = true
 [gpg]
@@ -6,4 +9,10 @@
 	email = {{email}}
 	name = {{name}}
 	signingKey = {{path-to-pub-ssh-key}}
+```
 
+# sample allowed signers files
+
+```
+<email> namespaces="git" $(cat ~/.ssh/<key>.pub)
+```
