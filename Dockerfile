@@ -205,7 +205,7 @@ RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
     kubie \
     lefthook \
     lua \
-    luaJIT \
+    luajit \
     poetry \
     ripgrep \
     rust \
