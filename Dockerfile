@@ -176,7 +176,7 @@ RUN fish -c true \
   && echo 'alias la="l -a"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'alias k="kubectl"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'alias dc="docker compose"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo 'alias nh="nvim --listen 0.0.0.0:6666 --headless &> /dev/null' >> ${XDG_CONFIG_HOME}/fish/config.fish
+  && echo 'alias nh="nvim --listen 0.0.0.0:6666 --headless &> /dev/null"' >> ${XDG_CONFIG_HOME}/fish/config.fish
 
 # git configuration
 COPY ./patch/kickstart.nvim/updates.patch /tmp
