@@ -112,7 +112,6 @@ ENV DC_URL https://github.com/docker/compose/releases/download/${DC_VERSION}/doc
 ENV BX_VERSION v0.13.1
 ENV BX_URL https://github.com/docker/buildx/releases/download/${BX_VERSION}/buildx-${BX_VERSION}.linux-amd64
 RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes \
-  && curl -sS https://setup.atuin.sh | bash \
   && mkdir /tmp/download \
   && curl -L ${DO_URL} | tar -zx -C /tmp/download \
   && chgrp --recursive docker /tmp/download \
@@ -162,6 +161,7 @@ RUN git clone https://github.com/elixir-lsp/elixir-ls.git ${LOCAL_SRC_HOME}/elix
 ENV MISE_ENV_FILE .env
 RUN curl https://mise.jdx.dev/install.sh | sh \
   && curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash \
+  && curl -sS https://raw.githubusercontent.com/atuinsh/atuin/main/install.sh | bash \
   && git clone https://github.com/tmux-plugins/tpm.git ${XDG_CONFIG_HOME}/tmux/plugins/tpm
 
 # configure fish and bash
@@ -173,14 +173,17 @@ RUN fish -c true \
   && echo 'alias cat="bat"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'alias l="eza --time-style=long-iso --color=auto --classify=always"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
   && echo 'alias ll="l -ahl"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
-  && echo 'alias la="l -a"' >> ${XDG_CONFIG_HOME}/fish/config.fish
+  && echo 'alias la="l -a"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias k="kubectl"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias dc="docker compose"' >> ${XDG_CONFIG_HOME}/fish/config.fish \
+  && echo 'alias nh="nvim --listen 0.0.0.0:6666 --headless &> /dev/null' >> ${XDG_CONFIG_HOME}/fish/config.fish
 
 # git configuration
 COPY ./patch/kickstart.nvim/updates.patch /tmp
 COPY ./config/nvim/lua/custom/plugins/init.lua /tmp
 RUN git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME}"/nvim \
   && cd ${XDG_CONFIG_HOME}/nvim \
-  && git reset --hard b9bd02d55b77293291a38fac9abe46acad9ab91d \
+  && git reset --hard 5aeddfdd5d0308506ec63b0e4f8de33e2a39355f \
   && git apply /tmp/updates.patch \
   && cp /tmp/init.lua ${XDG_CONFIG_HOME}/nvim/lua/custom/plugins \
   && nvim --headless "+Lazy! sync" +qa
@@ -191,7 +194,9 @@ RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
     bat \
     bitwarden \
     circleci-cli \
+    ctlptl \
     dagger \
+    eksctl \
     elixir \
     erlang \
     eza \
@@ -207,6 +212,7 @@ RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
     lua \
     luajit \
     poetry \
+    r \
     ripgrep \
     rust \
     starship \
@@ -214,6 +220,7 @@ RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
     terraform \
     tilt \
     tmux \
+    usage \
     usql \
     yarn \
     zoxide
