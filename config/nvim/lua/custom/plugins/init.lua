@@ -104,70 +104,70 @@ return {
     priority = 1000,
     config = true,
   },
-  {
-    'rest-nvim/rest.nvim',
-    dependencies = { 'luarocks.nvim' },
-    ft = {
-      'http',
-      'rest',
-    },
-    config = function()
-      require('rest-nvim').setup {
-        client = 'curl',
-        custom_dynamic_variables = {},
-        encode_url = true,
-        env_file = '.env',
-        skip_ssl_verification = false,
-        highlight = {
-          enable = true,
-          timeout = 15,
-        },
-        result = {
-          behavior = {
-            decode_url = true,
-            formatters = {
-              json = 'jq',
-              html = false,
-            },
-            show_info = {
-              curl_command = true,
-              headers = true,
-              http_info = true,
-              url = true,
-            },
-            statistics = {
-              enable = true,
-              stats = {
-                { 'total_time', title = 'Time taken:' },
-                { 'size_download_t', title = 'Download size:' },
-              },
-            },
-          },
-          split = {
-            horizontal = false,
-            in_place = false,
-          },
-        },
-      }
-    end,
-    keys = function()
-      local status_ok, which_key = pcall(require, 'which-key')
-      if status_ok then
-        which_key.register {
-          ['<leader>t'] = { name = 'Res[t]', _ = 'which_key_ignore' },
-        }
-      end
-      return {
-        { '<leader>tr', '<cmd>Rest run<cr>', desc = 'Run the request under cursor' },
-        {
-          '<leader>tp',
-          '<Plug>RestNvimPreview',
-          desc = 'Preview the curl command for the request under cursor',
-        },
-        { '<leader>tl', '<cmd>Rest run last<cr>', desc = 'Re-run the last request' },
-      }
-    end,
-  },
+  -- {
+  --   'rest-nvim/rest.nvim',
+  --   dependencies = { 'luarocks.nvim' },
+  --   ft = {
+  --     'http',
+  --     'rest',
+  --   },
+  --   config = function()
+  --     require('rest-nvim').setup {
+  --       client = 'curl',
+  --       custom_dynamic_variables = {},
+  --       encode_url = true,
+  --       env_file = '.env',
+  --       skip_ssl_verification = false,
+  --       highlight = {
+  --         enable = true,
+  --         timeout = 15,
+  --       },
+  --       result = {
+  --         behavior = {
+  --           decode_url = true,
+  --           formatters = {
+  --             json = 'jq',
+  --             html = false,
+  --           },
+  --           show_info = {
+  --             curl_command = true,
+  --             headers = true,
+  --             http_info = true,
+  --             url = true,
+  --           },
+  --           statistics = {
+  --             enable = true,
+  --             stats = {
+  --               { 'total_time', title = 'Time taken:' },
+  --               { 'size_download_t', title = 'Download size:' },
+  --             },
+  --           },
+  --         },
+  --         split = {
+  --           horizontal = false,
+  --           in_place = false,
+  --         },
+  --       },
+  --     }
+  --   end,
+  --   keys = function()
+  --     local status_ok, which_key = pcall(require, 'which-key')
+  --     if status_ok then
+  --       which_key.register {
+  --         ['<leader>t'] = { name = 'Res[t]', _ = 'which_key_ignore' },
+  --       }
+  --     end
+  --     return {
+  --       { '<leader>tr', '<cmd>Rest run<cr>', desc = 'Run the request under cursor' },
+  --       {
+  --         '<leader>tp',
+  --         '<Plug>RestNvimPreview',
+  --         desc = 'Preview the curl command for the request under cursor',
+  --       },
+  --       { '<leader>tl', '<cmd>Rest run last<cr>', desc = 'Re-run the last request' },
+  --     }
+  --   end,
+  -- },
   {
     'akinsho/toggleterm.nvim',
     opts = {
@@ -183,8 +183,8 @@ return {
     keys = function()
       local status_ok, which_key = pcall(require, 'which-key')
       if status_ok then
-        which_key.register {
-          ['<leader>m'] = { name = 'Toggle ter[m]inal', _ = 'which_key_ignore' },
+        which_key.add {
+          { '<leader>m', group = 'Toggle ter[m]inal' },
         }
       end
       vim.api.nvim_create_autocmd('TermOpen', {

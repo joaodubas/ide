@@ -1,5 +1,5 @@
 diff --git a/init.lua b/init.lua
-index 88658ef..b2e4e40 100644
+index 220d304..62a9702 100644
 --- a/init.lua
 +++ b/init.lua
 @@ -91,7 +91,7 @@ vim.g.mapleader = ' '
@@ -24,7 +24,7 @@ index 88658ef..b2e4e40 100644
  
  -- Don't show the mode, since it's already in the status line
  vim.opt.showmode = false
-@@ -154,6 +154,14 @@ vim.opt.cursorline = true
+@@ -157,6 +157,14 @@ vim.opt.cursorline = true
  -- Minimal number of screen lines to keep above and below the cursor.
  vim.opt.scrolloff = 10
  
@@ -39,7 +39,7 @@ index 88658ef..b2e4e40 100644
  -- [[ Basic Keymaps ]]
  --  See `:help vim.keymap.set()`
  
-@@ -578,6 +586,28 @@ require('lazy').setup({
+@@ -582,6 +590,28 @@ require('lazy').setup({
          -- tsserver = {},
          --
  
@@ -68,7 +68,7 @@ index 88658ef..b2e4e40 100644
          lua_ls = {
            -- cmd = {...},
            -- filetypes = { ...},
-@@ -592,6 +622,33 @@ require('lazy').setup({
+@@ -596,6 +626,33 @@ require('lazy').setup({
              },
            },
          },
@@ -102,7 +102,7 @@ index 88658ef..b2e4e40 100644
        }
  
        -- Ensure the servers and tools above are installed
-@@ -618,6 +675,33 @@ require('lazy').setup({
+@@ -622,6 +679,33 @@ require('lazy').setup({
              -- by the server configuration above. Useful when disabling
              -- certain features of an LSP (for example, turning off formatting for tsserver)
              server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
@@ -136,11 +136,11 @@ index 88658ef..b2e4e40 100644
              require('lspconfig')[server_name].setup(server)
            end,
          },
-@@ -835,7 +919,38 @@ require('lazy').setup({
+@@ -844,7 +928,39 @@ require('lazy').setup({
      'nvim-treesitter/nvim-treesitter',
      build = ':TSUpdate',
      opts = {
--      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
 +      ensure_installed = {
 +        'bash',
 +        'c',
@@ -163,6 +163,7 @@ index 88658ef..b2e4e40 100644
 +        'markdown',
 +        'markdown_inline',
 +        'python',
++        'query',
 +        'sql',
 +        'templ',
 +        'terraform',
@@ -176,7 +177,7 @@ index 88658ef..b2e4e40 100644
        -- Autoinstall languages that are not installed
        auto_install = true,
        highlight = {
-@@ -874,18 +989,18 @@ require('lazy').setup({
+@@ -881,18 +997,18 @@ require('lazy').setup({
    --  Uncomment any of the lines below to enable them (you will need to restart nvim).
    --
    -- require 'kickstart.plugins.debug',

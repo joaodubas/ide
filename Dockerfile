@@ -105,11 +105,11 @@ RUN apt-get update \
   && echo 'permit persist :wheel as root' > /etc/doas.conf
 
 # command line utilities
-ENV DO_VERSION 24.0.7
+ENV DO_VERSION 27.1.1
 ENV DO_URL https://download.docker.com/linux/static/stable/x86_64/docker-${DO_VERSION}.tgz
-ENV DC_VERSION v2.23.3
+ENV DC_VERSION v2.29.1
 ENV DC_URL https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-linux-x86_64
-ENV BX_VERSION v0.13.1
+ENV BX_VERSION v0.16.2
 ENV BX_URL https://github.com/docker/buildx/releases/download/${BX_VERSION}/buildx-${BX_VERSION}.linux-amd64
 RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes \
   && mkdir /tmp/download \
@@ -183,13 +183,14 @@ COPY ./patch/kickstart.nvim/updates.patch /tmp
 COPY ./config/nvim/lua/custom/plugins/init.lua /tmp
 RUN git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME}"/nvim \
   && cd ${XDG_CONFIG_HOME}/nvim \
-  && git reset --hard 5aeddfdd5d0308506ec63b0e4f8de33e2a39355f \
+  && git reset --hard 186018483039b20dc39d7991e4fb28090dd4750e \
   && git apply /tmp/updates.patch \
   && cp /tmp/init.lua ${XDG_CONFIG_HOME}/nvim/lua/custom/plugins \
   && nvim --headless "+Lazy! sync" +qa
 
 # install rtx plugins
 RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
+    age \
     awscli \
     bat \
     bitwarden \
