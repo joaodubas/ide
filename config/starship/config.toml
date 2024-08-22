@@ -1,3 +1,5 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
 format = """
 $username\
 $hostname\
@@ -8,7 +10,12 @@ $git_status\
 $line_break\
 $kubernetes\
 $line_break\
-$character"""
+$character
+"""
+
+[directory]
+truncation_length = 2
+truncate_to_repo = false
 
 [git_branch]
 format = "[$branch]($style)"
