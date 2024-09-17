@@ -1,5 +1,5 @@
 diff --git a/init.lua b/init.lua
-index 220d304..62a9702 100644
+index ea86b79..93250ab 100644
 --- a/init.lua
 +++ b/init.lua
 @@ -91,7 +91,7 @@ vim.g.mapleader = ' '
@@ -39,8 +39,8 @@ index 220d304..62a9702 100644
  -- [[ Basic Keymaps ]]
  --  See `:help vim.keymap.set()`
  
-@@ -582,6 +590,28 @@ require('lazy').setup({
-         -- tsserver = {},
+@@ -618,6 +626,28 @@ require('lazy').setup({
+         -- ts_ls = {},
          --
  
 +        cuelsp = {},
@@ -68,7 +68,7 @@ index 220d304..62a9702 100644
          lua_ls = {
            -- cmd = {...},
            -- filetypes = { ...},
-@@ -596,6 +626,33 @@ require('lazy').setup({
+@@ -632,6 +662,33 @@ require('lazy').setup({
              },
            },
          },
@@ -76,7 +76,7 @@ index 220d304..62a9702 100644
 +        r_language_server = {},
 +        templ = {},
 +        terraformls = {},
-+        tsserver = {},
++        ts_ls = {},
 +        yamlls = {
 +          settings = {
 +            yaml = {
@@ -102,9 +102,9 @@ index 220d304..62a9702 100644
        }
  
        -- Ensure the servers and tools above are installed
-@@ -622,6 +679,33 @@ require('lazy').setup({
+@@ -658,6 +715,33 @@ require('lazy').setup({
              -- by the server configuration above. Useful when disabling
-             -- certain features of an LSP (for example, turning off formatting for tsserver)
+             -- certain features of an LSP (for example, turning off formatting for ts_ls)
              server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
 +            -- overwrite elixirls for older versions of elixir
 +            --   * elixir 1.11 use version 0.12.0
@@ -136,9 +136,9 @@ index 220d304..62a9702 100644
              require('lspconfig')[server_name].setup(server)
            end,
          },
-@@ -844,7 +928,39 @@ require('lazy').setup({
-     'nvim-treesitter/nvim-treesitter',
-     build = ':TSUpdate',
+@@ -888,7 +972,39 @@ require('lazy').setup({
+     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
+     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
      opts = {
 -      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
 +      ensure_installed = {
@@ -177,7 +177,7 @@ index 220d304..62a9702 100644
        -- Autoinstall languages that are not installed
        auto_install = true,
        highlight = {
-@@ -881,18 +997,18 @@ require('lazy').setup({
+@@ -918,18 +1034,18 @@ require('lazy').setup({
    --  Uncomment any of the lines below to enable them (you will need to restart nvim).
    --
    -- require 'kickstart.plugins.debug',

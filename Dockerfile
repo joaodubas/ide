@@ -183,7 +183,7 @@ COPY ./patch/kickstart.nvim/updates.patch /tmp
 COPY ./config/nvim/lua/custom/plugins/init.lua /tmp
 RUN git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME}"/nvim \
   && cd ${XDG_CONFIG_HOME}/nvim \
-  && git reset --hard 186018483039b20dc39d7991e4fb28090dd4750e \
+  && git reset --hard 7201dc480134f41dd1be1f8f9b8f8470aac82a3b \
   && git apply /tmp/updates.patch \
   && cp /tmp/init.lua ${XDG_CONFIG_HOME}/nvim/lua/custom/plugins \
   && nvim --headless "+Lazy! sync" +qa
