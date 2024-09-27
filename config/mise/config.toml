@@ -1,6 +1,6 @@
 [tools]
 age = "1.2.0"
-awscli = "2.17.51"
+awscli = "2.17.60"
 bat = "0.24.0"
 bitwarden = "2024.7.2"
 circleci-cli = "0.1.30549"
