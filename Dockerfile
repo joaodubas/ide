@@ -105,11 +105,11 @@ RUN apt-get update \
   && echo 'permit persist :wheel as root' > /etc/doas.conf
 
 # command line utilities
-ENV DO_VERSION 27.1.1
+ENV DO_VERSION 27.3.1
 ENV DO_URL https://download.docker.com/linux/static/stable/x86_64/docker-${DO_VERSION}.tgz
-ENV DC_VERSION v2.29.1
+ENV DC_VERSION v2.29.7
 ENV DC_URL https://github.com/docker/compose/releases/download/${DC_VERSION}/docker-compose-linux-x86_64
-ENV BX_VERSION v0.16.2
+ENV BX_VERSION v0.17.1
 ENV BX_URL https://github.com/docker/buildx/releases/download/${BX_VERSION}/buildx-${BX_VERSION}.linux-amd64
 RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes \
   && mkdir /tmp/download \
@@ -162,7 +162,8 @@ ENV MISE_ENV_FILE .env
 RUN curl https://mise.jdx.dev/install.sh | sh \
   && curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash \
   && curl -sS https://raw.githubusercontent.com/atuinsh/atuin/main/install.sh | bash \
-  && git clone https://github.com/tmux-plugins/tpm.git ${XDG_CONFIG_HOME}/tmux/plugins/tpm
+  && git clone https://github.com/tmux-plugins/tpm.git ${XDG_CONFIG_HOME}/tmux/plugins/tpm \
+  && curl --proto '=https' --tlsv1.2 -LsSf https://github.com/jrmoulton/tmux-sessionizer/releases/download/v0.4.2/tmux-sessionizer-installer.sh | sh
 
 # configure fish and bash
 RUN fish -c true \
