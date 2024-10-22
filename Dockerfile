@@ -96,7 +96,7 @@ RUN apt-get update \
   && useradd \
     --uid ${USER_UID} \
     --gid coder \
-    --groups docker,wheel \
+    --groups docker,wheel,sudo \
     --shell $(which fish) \
     --home-dir /home/coder \
     --create-home \
@@ -184,7 +184,7 @@ COPY ./patch/kickstart.nvim/updates.patch /tmp
 COPY ./config/nvim/lua/custom/plugins/init.lua /tmp
 RUN git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME}"/nvim \
   && cd ${XDG_CONFIG_HOME}/nvim \
-  && git reset --hard 7201dc480134f41dd1be1f8f9b8f8470aac82a3b \
+  && git reset --hard 4120893b8a1f31a0957f2f891f7fbef73ddfb9b1 \
   && git apply /tmp/updates.patch \
   && cp /tmp/init.lua ${XDG_CONFIG_HOME}/nvim/lua/custom/plugins \
   && nvim --headless "+Lazy! sync" +qa
@@ -203,6 +203,7 @@ RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
     erlang \
     eza \
     fzf \
+    github-cli \
     helm \
     k3d \
     k3sup \
@@ -221,7 +222,6 @@ RUN ${LOCAL_BIN_HOME}/mise plugins install --force --yes \
     task \
     terraform \
     tilt \
-    tmux \
     usage \
     usql \
     yarn \
